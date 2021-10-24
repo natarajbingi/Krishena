@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph">
+<!--
+    app:startDestination="@id/homeFragment"
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.krishe.govern.views.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/home_fragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_reportsFragment"
+            app:destination="@id/reportsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_initReportFragment"
+            app:destination="@id/initReportFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.krishe.govern.views.reports.ReportsFragment"
+        android:label="ReportsFragment"
+        tools:layout="@layout/reports_fragment"  />
+
+    <fragment
+        android:id="@+id/initReportFragment"
+        android:name="com.krishe.govern.views.initreport.InitReportFragment"
+        android:label="InitReportFragment"
+        tools:layout="@layout/init_reports_fragment"   >
+        <action
+            android:id="@+id/action_initReportFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/mainFragment"
+            />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.krishe.govern.camera.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main" >
+        <argument
+            android:name="nCallBack"
+            app:nullable="false"
+            app:argType="com.krishe.govern.views.home.CommunicationCallBack"/>
+    </fragment>-->
+</navigation>

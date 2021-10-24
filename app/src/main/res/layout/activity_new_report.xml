@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="newReportModel"
+            type="com.krishe.govern.views.newReport.NewReportViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".views.newReport.NewReportActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#DFE6ED"
+            android:orientation="vertical"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/header_title1"
+                style="@style/header_title_text"
+                android:text="Add new Implement Report"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/implementName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Implement Name"
+                android:textColor="@color/headerText"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/header_title1"
+                app:layout_constraintTop_toBottomOf="@+id/header_title1" />
+
+            <TextView
+                android:id="@+id/implementType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Implement Type"
+                android:textColor="@color/headerText"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/implementName"
+                app:layout_constraintTop_toBottomOf="@+id/implementName" />
+
+            <TextView
+                android:id="@+id/ownerShip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Ownership"
+                android:textColor="@color/headerText"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_title1" />
+
+            <TextView
+                android:id="@+id/implementId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Implement ID"
+                android:textColor="@color/headerText"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/ownerShip"
+                app:layout_constraintTop_toBottomOf="@+id/ownerShip" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintEnd_toEndOf="@+id/header_title"
+            app:layout_constraintStart_toStartOf="@+id/header_title"
+            app:layout_constraintTop_toBottomOf="@+id/header_title">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Step-1 & 3 handling in RecyclerView-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/stepOneImagesLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/imgae_layout" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
+                    android:id="@+id/ifShowStepOneImagesLayout"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/imgAddView"
+                        android:layout_width="205dp"
+                        android:layout_height="205dp"
+                        android:src="@drawable/ic_other_img"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:text="Other"
+                        android:textColor="@color/radioOn"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Step-2 handling in stepTwoImagesLayout-->
+                <LinearLayout
+                    android:id="@+id/stepTwoImagesLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:padding="10dp"
+                        android:visibility="gone"
+                        android:text="Please Select Current \nImplement State"
+                        android:textColor="@color/headerText"
+                        android:textSize="24sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+                    <RadioGroup
+                        android:id="@+id/currentImplementStatusGrp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
+
+                        <!--<LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content">
+
+                            <RadioButton
+                                android:id="@+id/radioButton"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Functional" />
+
+                            <RadioButton
+                                android:id="@+id/radioButton1"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="Non-Functional" />
+
+                        </LinearLayout>-->
+                        <!--<LinearLayout
+                           android:layout_width="match_parent"
+                           android:orientation="horizontal"
+                           android:layout_height="wrap_content">-->
+
+                           <RadioButton
+                               android:id="@+id/radioButton2"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Servicing Required" />
+
+                           <RadioButton
+                               android:id="@+id/radioButton3"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Major Damage" />
+
+                    <!--</LinearLayout>-->
+             <!--<LinearLayout
+                 android:layout_width="match_parent"
+                 android:orientation="horizontal"
+                 android:layout_height="wrap_content">-->
+
+                           <RadioButton
+                               android:id="@+id/radioButton4"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Replacement required" />
+
+                           <RadioButton
+                               android:id="@+id/radioButton5"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="All OK" />
+                        <!-- </LinearLayout>-->
+                   </RadioGroup>
+
+                   <TextView
+                       android:id="@+id/text2"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp"
+                       android:padding="10dp"
+                       android:visibility="gone"
+                       android:text="Additional Report \nComments"
+                       android:textColor="@color/headerText"
+                       android:textSize="24sp"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+                   <com.google.android.material.textfield.TextInputEditText
+                       android:id="@+id/reportCommentsEditext"
+                       android:layout_width="match_parent"
+                       android:layout_height="155dp"
+                       android:layout_margin="10dp"
+                       android:background="@drawable/custom_background"
+                       android:gravity="start"
+                       android:hint="Other Report Comments"
+                       android:padding="10dp" />
+
+                   <ImageView
+                       android:id="@+id/testImg"
+                       android:layout_width="175dp"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center_horizontal"
+                       android:src="@drawable/qrimg"
+                       android:visibility="gone" />
+               </LinearLayout>
+
+               <LinearLayout
+                   android:id="@+id/decisionButtonsLayout"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:padding="5dp">
+
+                   <androidx.appcompat.widget.AppCompatButton
+                       android:id="@+id/backButton"
+                       style="@style/borderButton"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="15dp"
+                       android:layout_weight="1"
+                       android:text="Back" />
+
+                   <androidx.appcompat.widget.AppCompatButton
+                       android:id="@+id/forwardDecisionButton"
+                       style="@style/SubmitButton"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="15dp"
+                       android:layout_weight="1"
+                       android:text="Add Details" />
+               </LinearLayout>
+           </LinearLayout>
+       </androidx.core.widget.NestedScrollView>
+
+   </LinearLayout>
+</layout>

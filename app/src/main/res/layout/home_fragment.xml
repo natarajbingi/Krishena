@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="homeModel"
+            type="com.krishe.govern.views.home.HomeViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".views.home.HomeFragment">
+        <LinearLayout
+            android:id="@+id/header_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#DFE6ED"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/header_title_text"
+                android:gravity="center"
+                android:text="@string/krish_e_implement_ngovernance_app" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintEnd_toEndOf="@+id/header_title"
+            app:layout_constraintStart_toStartOf="@+id/header_title"
+            app:layout_constraintTop_toBottomOf="@+id/header_title">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/newQrCodeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#DFE6ED"
+                    android:orientation="horizontal"
+                    android:paddingTop="25dp"
+                    android:paddingBottom="25dp">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.40"
+                        android:src="@drawable/qrcode" />
+
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#ABB4BD"
+                        android:paddingBottom="5dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="0.35"
+                        android:gravity="center_vertical"
+                        android:text="@string/new_implement_report"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/reportLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#96C3EC"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="126dp"
+                        android:layout_weight="0.40"
+                        android:src="@drawable/searchicon" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="0.35"
+                        android:gravity="center_vertical"
+                        android:text="@string/view_reports"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/custom_background"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="0.45"
+                            android:gravity="center_vertical"
+                            android:text="@string/statistics"
+                            android:textColor="@color/radioOn"
+                            android:textSize="23sp"
+                            android:textStyle="bold" />
+
+                        <RadioGroup
+                            android:id="@+id/statsGroup"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0.55"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/statMontly"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/custom_btn_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="@string/monthly"
+                                android:textColor="@drawable/rbtn_textcolor_selector"
+                                android:textStyle="bold" />
+
+                            <RadioButton
+                                android:id="@+id/statFY"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:background="@drawable/custom_btn_radio"
+                                android:button="@null"
+                                android:checked="true"
+                                android:gravity="center"
+                                android:text="@string/this_fy"
+                                android:textColor="@drawable/rbtn_textcolor_selector"
+                                android:textStyle="bold" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <include layout="@layout/statslayout" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.85"
+                            android:text="Number of reports approved by admin"
+                            android:textColor="@color/radioPressed"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.15"
+                            android:gravity="center"
+                            android:text="5"
+                            android:textColor="@color/radioOn"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.85"
+                            android:text="Number of Implements under active Inventory"
+                            android:textColor="@color/radioPressed"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.15"
+                            android:gravity="center"
+                            android:text="17"
+                            android:textColor="@color/radioOn"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</layout>

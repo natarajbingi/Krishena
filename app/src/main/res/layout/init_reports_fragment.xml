@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="initReportModel"
+            type="com.krishe.govern.views.initreport.InitReportViewModel" />
+    </data>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/header_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="#DFE6ED"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/header_title_text"
+                    android:text="@string/add_new_implement_report" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:visibility="gone"
+                android:text="@string/select_implement_from_list"
+                android:textColor="@color/headerText"
+                android:textSize="24sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerRefreshLayout"
+                android:visibility="gone"
+                android:gravity="center_horizontal|center_vertical"
+                app:layout_constraintStart_toStartOf="@+id/text1"
+                app:layout_constraintTop_toBottomOf="@+id/text1">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/implementListSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="0.8"
+                    android:entries="@array/implementListArray" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:id="@+id/refreshImplementButton"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/ic_refresh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="10dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_bg_lightly"
+                android:id="@+id/scannerNewLayout"
+                app:layout_constraintStart_toStartOf="@+id/header_title"
+                app:layout_constraintTop_toBottomOf="@+id/header_title">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/qrcode"
+                    android:layout_height="95dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:textColor="@color/headerText"
+                        android:textSize="18sp"
+                        android:textStyle="normal"
+                        android:gravity="right"
+                        android:layout_marginBottom="7dp"
+                        android:text="Select Implement"
+                        android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="115dp"
+                        android:layout_height="45dp"
+                        style="@style/scannerButton"
+                        android:id="@+id/scanQrCode"
+                        android:text="Scan QR "
+                        android:textColor="@color/white" >
+                    </androidx.appcompat.widget.AppCompatButton>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text2"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/scannerNewLayout"
+                app:layout_constraintTop_toBottomOf="@+id/scannerNewLayout"
+                android:text="@string/if_implement_is_not_available_please_refresh_list"
+                android:textColor="@color/errorText"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/or"
+                android:padding="10dp"
+                android:visibility="gone"
+                android:id="@+id/text3"
+                android:gravity="center"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/text2"
+                app:layout_constraintTop_toBottomOf="@+id/text2"
+                android:textColor="@color/headerText"
+                android:textSize="26sp" />
+
+            <ImageView
+                android:id="@+id/qrImgClick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/text3"
+                android:src="@drawable/qrimg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/text4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/scan_qr_code"
+                android:textColor="@color/headerText"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qrImgClick" />
+
+            <TextView
+                android:id="@+id/text5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/report_type"
+                android:textColor="@color/headerText"
+                android:textSize="24sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="45dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scannerNewLayout" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerTypeLayout"
+                android:gravity="center_horizontal|center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text5">
+
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/reportTypeSpinner"
+                    style="@style/spinner_style"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.9"
+                    android:entries="@array/reportsTypeArray" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:layout_weight="0.1"
+                    android:src="@drawable/ic_refresh" />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/reportTypeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:paddingEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:id="@+id/locationImg"
+                    android:layout_width="35dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/qrlocationdefault"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/addImageNxt"
+                    style="@style/SubmitButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/add_images"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/please_enable_location_to_proceed"
+                    android:textColor="@color/errorText"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/locationImg"
+                    app:layout_constraintTop_toBottomOf="@+id/locationImg" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/locationSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:thumbTint="@color/ScannerButton"
+                    app:trackTint="@color/ScannerButton"
+                    android:layout_marginStart="15dp"
+                    app:useMaterialThemeColors="false"
+                    app:layout_constraintStart_toEndOf="@+id/locationImg"
+                    app:layout_constraintTop_toTopOf="@+id/locationImg" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
