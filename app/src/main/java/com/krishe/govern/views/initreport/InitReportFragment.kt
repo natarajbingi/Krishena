@@ -132,9 +132,9 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         if (implement == "Select" && implementID.isEmpty()){
             KrisheUtils.toastAction(activity,"Select Implement from drop down / scan from QR code")
             return
-        } else {
-            implementID = implement
-        }
+        } //else {
+           // implementID = implement
+        //}
 
         if (reportType == "Select"){
             KrisheUtils.toastAction(activity,"please Select Report Type")
@@ -207,13 +207,13 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         //implementID = msg
 
         Log.e("implementID", " $msg")
-       val msgJsonObj: JSONObject = JSONObject(msg)
+       val msgJsonObj = JSONObject(msg)
         newReportModelReq = NewReportModelReq(msgJsonObj.optString("id"))
         implementID = msgJsonObj.optString("id")
         newReportModelReq.implementName = msgJsonObj.optString("implement_type")
         newReportModelReq.ownerShip = msgJsonObj.optString("dealership_name")
-        newReportModelReq.latitude = latitude
-        newReportModelReq.longitude = longitude
+        newReportModelReq.latitude = latitude.toString()
+        newReportModelReq.longitude = longitude.toString()
         KrisheUtils.toastAction(ctx ,implementID)
     }
 

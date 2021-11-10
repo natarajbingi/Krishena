@@ -1,9 +1,21 @@
 package com.krishe.govern.views.reports
 
+import org.json.JSONObject
+
 data class ReportsItemModel(
-    val reportId: Int,
-    val reportName: String,
-    val reportDate: String,
-    val typeName: String,
-    val reportStatus: String
+    val id: Int,
+    val userID: String,
+    val currentImplementStatus: String,
+    val implementID: String,
+    val implementName: String,
+    val isEditable: String,
+    val latitude: String,
+    val longitude: String,
+    val nameImageModel: String,
+    val ownerShip: String,
+    val reportComment: String,
+    val reportTypeId: String,
+    val reportTypeName: String,
+    val reportStatusForApproval: String,
+    val createdDate: String
 )

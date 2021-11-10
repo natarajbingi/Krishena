@@ -148,9 +148,9 @@ class KrisheUtils {
         fun logPrint(call: String, req: Any?, res: Any?) {
             if (BuildConfig.BUILD_TYPE.equals("debug")) {
                 val g = Gson()
-                req!=null ?: Log.d("LogReq-", g.toJson(req))
-                res!=null ?: Log.d("LogRes-", g.toJson(res))
-                call.isNotEmpty() ?: Log.d("Request-", call)
+                Log.d("Request", call)
+                req!=null ?: Log.d("LogReq", g.toJson(req))
+                res!=null ?: Log.d("LogRes", g.toJson(res))
             }
         }
     }

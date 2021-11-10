@@ -11,20 +11,20 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ReportItemBinding
 import com.krishe.govern.utils.KrisheUtils
+import com.krishe.govern.views.newReport.NameImageModel
 import com.krishe.govern.views.newReport.NewReportActivity
 import com.krishe.govern.views.newReport.NewReportModelReq
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 //class ReportsStatusAdapter : RecyclerView.Adapter<ReportsStatusAdapter.ReportsViewHolder>() {
 class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
     ListAdapter<ReportsItemModel, ReportsStatusAdapter.ReportsViewHolder>(ReportsDiffCallback()) {
-    /*var data = listOf<ReportsItemModel>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }*/
     lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportsViewHolder {
@@ -47,11 +47,20 @@ class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
         @SuppressLint("UseCompatLoadingForDrawables")
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         fun bindReport(item: ReportsItemModel, listener: ReportsAdapterListener) {
-            itemBinding.reportName.text = item.reportName
-            itemBinding.reportDate.text = item.reportDate
-            itemBinding.typeName.text = item.typeName
-            itemBinding.reportStatusIcon.background = when (item.reportStatus) {
-                "Submitted" -> itemView.context.getDrawable(R.drawable.custom_round_orange)
+            itemBinding.reportName.text = item.implementName
+
+            val start_dt = item.createdDate
+
+            val parser: DateFormat = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ")
+            val date: Date = parser.parse(start_dt) as Date
+
+            val formatter: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
+            //System.out.println(formatter.format(date))
+
+            itemBinding.reportDate.text = formatter.format(date)
+            itemBinding.typeName.text = item.reportTypeName
+            itemBinding.reportStatusIcon.background = when (item.reportStatusForApproval) {
+                "Submitted","Not Approved" -> itemView.context.getDrawable(R.drawable.custom_round_orange)
                 "Follow-up" -> itemView.context.getDrawable(R.drawable.custom_round_purple)
                 "Approved" -> itemView.context.getDrawable(R.drawable.custom_round_green)
                 else -> itemView.context.getDrawable(R.drawable.custom_round_green)
@@ -69,16 +78,22 @@ class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
             }
 
             itemBinding.viewReportClick.setOnClickListener {
-                KrisheUtils.toastAction(itemView.context, "G0 Next page")
+                KrisheUtils.toastAction(itemView.context, "Go Next page")
 
-                val newReportModelReq = NewReportModelReq(item.typeName)
-                newReportModelReq.implementID = item.reportName
-                newReportModelReq.implementName = item.reportStatus
-                newReportModelReq.reportTypeID = item.reportName
-                newReportModelReq.reportTypeName = item.reportStatus
-                newReportModelReq.ownerShip = item.reportStatus
-                newReportModelReq.latitude = 0.0
-                newReportModelReq.longitude = 0.0
+                val newReportModelReq = NewReportModelReq(item.implementID)
+                newReportModelReq.implementID = item.implementID
+                newReportModelReq.implementName = item.implementName
+                newReportModelReq.reportTypeID = item.reportTypeId
+                newReportModelReq.reportTypeName = item.reportTypeName
+                newReportModelReq.ownerShip = item.ownerShip
+                newReportModelReq.latitude = item.latitude
+                newReportModelReq.longitude = item.longitude
+                val gson = Gson()
+                val data: Array<NameImageModel> = gson.fromJson(
+                    item.nameImageModel,
+                    Array<NameImageModel>::class.java
+                )
+                newReportModelReq.nameImageModel = data.toList()
 
                 val intent = Intent(itemView.context, NewReportActivity::class.java)
                 /*intent.putExtra("implementListID", "implementListID")
@@ -113,7 +128,7 @@ class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
             oldItem: ReportsItemModel,
             newItem: ReportsItemModel
         ): Boolean {
-            return oldItem.reportId == newItem.reportId
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(

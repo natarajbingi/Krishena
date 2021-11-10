@@ -10,6 +10,7 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interceptors.HttpLoggingInterceptor
 import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.google.gson.Gson
 import com.jacksonandroidnetworking.JacksonParserFactory
 import com.krishe.govern.models.Data
 import com.krishe.govern.models.ImplementsDataRes
@@ -35,10 +36,12 @@ class NetWorkCall {
         val cacheSize = 5 * 1024 * 1024 // 5 MB size
 
         const val BASE_URL = "https://krishe-rental.azurewebsites.net"
+        const val BASE_URL_ = "http://krisheapp.pythonanywhere.com"
         val API_KEY = "ApiKey"
         val KEY = "WqvL33dHhSNs1AjUZPJjv8zJ8J1iD3qE"
         val HEADER_CACHE_CONTROL = "Cache-Control"
         val HEADER_PRAGMA = "Pragma"
+//        val bodyParameterMap: MutableMap<String, String> = mutableMapOf()
 
         fun NetworkingSetup(context: Context) {
 
@@ -78,7 +81,7 @@ class NetWorkCall {
             return httpLoggingInterceptor
         }
 
-        private fun getAndroidNetworking(url: String): ANRequest<out ANRequest<*>> {
+        private fun getANReqAzure(url: String): ANRequest<out ANRequest<*>> {
             return AndroidNetworking.get("$BASE_URL$url")
                 .addHeaders("Content-Type", "application/json")
                 .addHeaders(API_KEY, KEY)
@@ -87,11 +90,30 @@ class NetWorkCall {
                 .build()
         }
 
-        suspend fun getImplementList(v: InitIReportCallBackReturn) {
+        private fun getANReqPython(url: String): ANRequest<out ANRequest<*>> {
+            return AndroidNetworking.get("$BASE_URL_$url")
+                 .addHeaders("Content-Type", "application/json")
+                 //.addHeaders(API_KEY, KEY)
+                .addHeaders("Accept", "application/json")
+                .setPriority(Priority.MEDIUM)
+                .build()
+        }
+
+        private fun postANReqPythonJson(url: String, jsonObject:JSONObject ): ANRequest<out ANRequest<*>> {
+            return AndroidNetworking.post("$BASE_URL_$url")
+                 .addHeaders("Content-Type", "application/json")
+                //.addHeaders(API_KEY, KEY)
+                .addHeaders("Accept", "application/json")
+                .addJSONObjectBody(jsonObject)
+                .setPriority(Priority.MEDIUM)
+                .build()
+        }
+
+        suspend fun getDefaultImplement(v: InitIReportCallBackReturn) {
             var implementsDataRes: ImplementsDataRes? = null
             val data: MutableList<Data> = mutableListOf()
             return withContext(Dispatchers.IO) {
-                getAndroidNetworking("/governance/implements/")
+                getANReqAzure("/governance/implements/")
                     .getAsJSONObject(object : JSONArrayRequestListener, JSONObjectRequestListener {
                         override fun onResponse(response: JSONObject?) {
                             if (response?.getBoolean("status") == true && response.getString("message") == "Success") {
@@ -126,11 +148,11 @@ class NetWorkCall {
                                 implementsDataRes = ImplementsDataRes(false, "Failed", data)
                             }
                             implementsDataRes?.let { v.onSuccessImplementList(it) }
-                            //                            Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
+                            // Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
                         }
 
                         override fun onResponse(response: JSONArray?) {
-                            //                            Log.e("TAG", "onResponseJSONArray: ${response.toString()}")
+                            // Log.e("TAG", "onResponseJSONArray: ${response.toString()}")
                             implementsDataRes = ImplementsDataRes(false, "Failed", data)
                             implementsDataRes?.let { v.onSuccessImplementList(it) }
                         }
@@ -150,6 +172,56 @@ class NetWorkCall {
             }
         }
 
+        suspend fun getMySavedImplements(v: ReportsICallBack) {
+            var reportsItemModel: MutableList<ReportsItemModel> = mutableListOf()
+            val data: MutableList<Data> = mutableListOf()
+            val bodyParamJSON = JSONObject()
+            bodyParamJSON.put("userID","10")
+            Log.e("TAG", "bodyParamJSON: $bodyParamJSON")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson("/get_implement",bodyParamJSON)
+                    .getAsJSONArray(object : JSONArrayRequestListener {
+                        override fun onResponse(response: JSONArray) {
+                            Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
+                            val gson = Gson()
+                            val data: Array<ReportsItemModel> = gson.fromJson(
+                                response.toString(),
+                                Array<ReportsItemModel>::class.java
+                            )
+                            reportsItemModel.addAll(data)
+                            v.onSuccess(reportsItemModel)
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onError("Failed")
+                        }
+                    })
+                /*, JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject?) {
+                    *//*if (response?.getBoolean("status") == true && response.getString("message") == "Success") {
+
+                    } else {
+
+                    }*//*
+                    v.onSuccess(emptyList())
+                    Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
+                }
+
+                override fun onResponse(response: JSONArray?) {
+                    Log.e("TAG", "onResponseJSONArray: ${response.toString()}")
+                    v.onSuccess(emptyList())
+                }
+
+                override fun onError(anError: ANError?) {
+                    Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                    v.onError("Failed")
+                }
+            }*/
+                //return@withContext implementsDataRes
+            }
+        }
+
         fun getImplementLists(v: InitIReportCallBack) {
             AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
                 .addPathParameter("pageNumber", "0")
@@ -165,15 +237,7 @@ class NetWorkCall {
                         if (response != null) {
                             for (i in 0 until response.length()) {
                                 val res = response.getJSONObject(i)
-                                data.add(
-                                    ReportsItemModel(
-                                        res.getInt("id"),
-                                        res.getString("firstname"),
-                                        "21-Mar-2021",
-                                        res.getString("lastname"),
-                                        "Submitted",
-                                    )
-                                )
+
                             }
                             // v.onSuccessImplementList(ImplementsDataRes)
                         }
@@ -201,18 +265,7 @@ class NetWorkCall {
                         Log.e("TAG", "onResponse: ${response.toString()}")
                         val data: MutableList<ReportsItemModel> = mutableListOf<ReportsItemModel>()
                         if (response != null) {
-                            for (i in 0 until response.length()) {
-                                val res = response.getJSONObject(i)
-                                data.add(
-                                    ReportsItemModel(
-                                        res.getInt("id"),
-                                        res.getString("firstname"),
-                                        "21-Mar-2021",
-                                        res.getString("lastname"),
-                                        "Submitted",
-                                    )
-                                )
-                            }
+
                             v.onSuccess(data)
                         }
                     }
@@ -240,15 +293,7 @@ class NetWorkCall {
                 val data: MutableList<ReportsItemModel> = mutableListOf<ReportsItemModel>()
                 val users: List<User> = response.result
                 for (user in users) {
-                    data.add(
-                        ReportsItemModel(
-                            user.id,
-                            user.firstname,
-                            "21-Mar-2021",
-                            user.lastname,
-                            "Submitted",
-                        )
-                    )
+
                 }
                 v.onSuccess(data)
             } else {
@@ -281,15 +326,7 @@ class NetWorkCall {
                         if (response != null) {
                             for (i in 0 until response.length()) {
                                 val res = response.getJSONObject(i)
-                                data.add(
-                                    ReportsItemModel(
-                                        res.getInt("id"),
-                                        res.getString("firstname"),
-                                        "21-Mar-2021",
-                                        res.getString("lastname"),
-                                        "Submitted",
-                                    )
-                                )
+
                             }
                             v.onSuccess(data)
                         }
@@ -306,5 +343,26 @@ class NetWorkCall {
 
 
     }// companion object over
+    private fun convertCode1() {
+        AndroidNetworking.post("https://www.yantralive.com/newapi/email_change.php")
+            .addHeaders("Mobile", "8527801400")
+            .addHeaders("Content-Type","application/x-www-form-urlencoded;charset=UTF8")
+            .addHeaders("Authorization","Bearer 2d71d4f37225f16f317b79dbb89cf1e79e66681f")
+            .setContentType("application/json; charset=utf-8")
+            .setTag("convert")
+            .setPriority(Priority.MEDIUM)
+            .addUrlEncodeFormBodyParameter("newmail", "jmi.mohsin1@gmail.com")
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener{
+                override fun onResponse(response: JSONObject?) {
+                    println(response.toString())
+                }
+
+                override fun onError(error: ANError?) {
+                    println(error.toString())
+                }
+            })
+    }
 
 }
+

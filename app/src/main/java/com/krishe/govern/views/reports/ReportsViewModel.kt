@@ -1,11 +1,13 @@
 package com.krishe.govern.views.reports
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.krishe.govern.networks.NetWorkCall
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ReportsViewModel(application: Application) : AndroidViewModel(application), ReportsICallBack{
     // TODO: Implement the ViewModel
@@ -22,7 +24,9 @@ class ReportsViewModel(application: Application) : AndroidViewModel(application)
 
     fun getReportsCall() {
         view.onPrShow()
-        NetWorkCall.getCallObjectpost(this)
+        viewModelScope.launch(Dispatchers.IO) {
+            NetWorkCall.getMySavedImplements(this@ReportsViewModel)
+        }
     }
 
     override fun onError(msg: String) {
@@ -32,7 +36,7 @@ class ReportsViewModel(application: Application) : AndroidViewModel(application)
 
     override fun onSuccess(list: List<ReportsItemModel>) {
         view.onPrHide()
-        Log.e(ReportsFragment.TAG, "onSuccess: ${list[0].reportName}" )
+       // Log.e(ReportsFragment.TAG, "onSuccess: ${list[0].reportName}" )
         data.postValue(list)
         //view.onSuccess(list)
     }

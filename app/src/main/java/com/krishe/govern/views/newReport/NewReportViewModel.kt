@@ -103,12 +103,12 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
 
     var count = 0
     fun imageUploadSet(context: Context): Boolean {
-        if (count == defaultData.size - 1) {
+        if (count == defaultData.size) {
             return true
         } else {
             val uri = File(defaultData.get(count).imgPath).toUri() //Uri.parse()
-            val uploadedImage = imageUploadAzure(uri, context)
-            defaultData.get(count).imgPath = uploadedImage
+            val uploadedImage = imageUploadAzure(uri, context,count)
+           // defaultData.get(count).imgPath = uploadedImage
             count++
 
             imageUploadSet(context)
@@ -116,7 +116,7 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun imageUploadAzure(imageUri: Uri, context: Context): String {
+    private fun imageUploadAzure(imageUri: Uri, context: Context, count: Int): String {
         var imageName = "Err"
         try {
             Log.e("TAG", "UploadImage:imageUri $imageUri")
@@ -129,8 +129,9 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
                     //handler.post {
                     Log.e(
                         "TAGSuccess",
-                        "Image Uploaded SuccessfuLly. Name = $imageName count-$count"
+                        "Image Uploaded SuccessfuLly. Name = $imageName count-${count}"
                     )
+                    defaultData.get(count).imgPath = imageName
                     //}
                 } catch (ex: Exception) {
                     val exceptionMessage = ex.message

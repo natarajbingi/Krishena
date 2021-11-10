@@ -26,13 +26,13 @@ class ReportsFragment : BaseFragment() ,ReportsICallBack, DatePickerDialog.OnDat
     var imgDate = 0
 
     val data = listOf<ReportsItemModel>(
-        ReportsItemModel(1,"Rotavator WLX", "21-Mar-2021", "Krishe", "Submitted"),
-        ReportsItemModel(2,"Rotavator 2 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
-        ReportsItemModel(3,"Rotavator 3 WLX", "31-Jul-2021", "Krishe", "Approved"),
-        ReportsItemModel(4,"Rotavator 4 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
-        ReportsItemModel(5,"Rotavator 5 WLX", "31-Jul-2021", "Krishe", "Approved"),
-        ReportsItemModel(6,"Rotavator 6 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
-        ReportsItemModel(7,"Rotavator 7 WLX", "21-Mar-2021", "Krishe", "Submitted"),
+//        ReportsItemModel(1,"Rotavator 1 WLX", "21-Mar-2021", "Krishe", "Submitted"),
+//        ReportsItemModel(2,"Rotavator 2 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
+//        ReportsItemModel(3,"Rotavator 3 WLX", "31-Jul-2021", "Krishe", "Approved"),
+//        ReportsItemModel(4,"Rotavator 4 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
+//        ReportsItemModel(5,"Rotavator 5 WLX", "31-Jul-2021", "Krishe", "Approved"),
+//        ReportsItemModel(6,"Rotavator 6 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
+//        ReportsItemModel(7,"Rotavator 7 WLX", "21-Mar-2021", "Krishe", "Submitted"),
     )
     companion object {
         fun newInstance() = ReportsFragment()
@@ -62,9 +62,9 @@ class ReportsFragment : BaseFragment() ,ReportsICallBack, DatePickerDialog.OnDat
 
             }
         };
-        //viewModel.getReportsCall()
+        viewModel.getReportsCall()
         viewModel.getData().observe(viewLifecycleOwner, Observer<List<ReportsItemModel>>(){
-            Log.e(TAG, "onCreateView: ${it[0].reportName}" )
+//            Log.e(TAG, "onCreateView: ${it[0].reportName}" )
             adapter.submitList(it)
         })
 

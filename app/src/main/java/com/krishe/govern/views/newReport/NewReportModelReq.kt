@@ -8,8 +8,8 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
     var reportTypeID: String = ""
     var reportTypeName: String = ""
     var ownerShip: String = ""
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
+    var latitude: String = "0.0"
+    var longitude: String = "0.0"
     var nameImageModel: List<NameImageModel> = emptyList()
     var currentImplementStatus: String = ""
     var reportComment: String = ""
@@ -21,8 +21,8 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
         ownerShip = parcel.readString().toString()
         currentImplementStatus = parcel.readString().toString()
         reportComment = parcel.readString().toString()
-        latitude = parcel.readDouble()
-        longitude = parcel.readDouble()
+        latitude = parcel.readString().toString()
+        longitude = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -33,8 +33,8 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
         parcel.writeString(ownerShip)
         parcel.writeString(currentImplementStatus)
         parcel.writeString(reportComment)
-        parcel.writeDouble(latitude)
-        parcel.writeDouble(longitude)
+        parcel.writeString(latitude)
+        parcel.writeString(longitude)
     }
 
     override fun describeContents(): Int {

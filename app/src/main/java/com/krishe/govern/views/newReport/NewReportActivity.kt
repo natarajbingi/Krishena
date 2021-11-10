@@ -33,7 +33,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
     private lateinit var viewModel: NewReportViewModel
     lateinit var binding: ActivityNewReportBinding
     private lateinit var adapter: NewReportAdapter
-    private lateinit var newReportModelReq: NewReportModelReq
+    private var newReportModelReq: NewReportModelReq = NewReportModelReq("")
 
     var from: String = ""
     var latitude: Double = 0.0
@@ -55,7 +55,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        newReportModelReq = intent.getParcelableExtra<NewReportModelReq>("dateModel")!!
+        newReportModelReq = intent.getParcelableExtra("dateModel")!!
         from = intent.getStringExtra("from").toString()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report)
@@ -131,11 +131,11 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
                     if (currentStep == stepThree) {
                         if (testU) {
                             viewModel.imageUploadSet(this)
-                            viewModel.count = 0
                         }
                         newReportModelReq.nameImageModel = viewModel.defaultData
                         KrisheUtils.logPrint("Testing class", newReportModelReq, null)
                         KrisheUtils.toastAction(this, "Report will Submit soon")
+                        viewModel.count = 0
                         setUpCurrentStepView()
                     }
         }

@@ -29,7 +29,7 @@ class HomeViewModel(application: Application) : BaseViewModel(application), Init
     fun onGetImplementList() {
         view.onPrShow()
         viewModelScope.launch(Dispatchers.IO) {
-            NetWorkCall.getImplementList(this@HomeViewModel)
+            NetWorkCall.getDefaultImplement(this@HomeViewModel)
         }
     }
 
