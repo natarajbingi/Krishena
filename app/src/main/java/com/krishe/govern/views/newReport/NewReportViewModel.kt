@@ -13,48 +13,59 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 import com.krishe.govern.imgAzure.ImageManager
+import com.krishe.govern.networks.NetWorkCall
+import com.krishe.govern.views.reports.ReportsICallBack
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 
-class NewReportViewModel(application: Application) : AndroidViewModel(application) {
+class NewReportViewModel(application: Application) : AndroidViewModel(application),NewReportCallBack {
 
     var defaultData = mutableListOf(
         NameImageModel(
             0,
-            "/data/user/0/com.krishe.govern/cache/EasyImage/ei_16350615735038942260417884512182.jpg",
+            "",
             "Top View",
             true
         ),
         NameImageModel(
             1,
-            "/data/user/0/com.krishe.govern/cache/EasyImage/ei_16350616013838435685476596135161.jpg",
+            "",
             "Front View",
             true
         ),
         NameImageModel(
             2,
-            "/data/user/0/com.krishe.govern/cache/EasyImage/ei_16350616136107525071678437372477.jpg",
+            "",
             "Left View",
             true
         ),
         NameImageModel(
             3,
-            "/data/user/0/com.krishe.govern/cache/EasyImage/ei_16350616215056256379476617957603.jpg",
+            "",
             "Right View",
             true
         ),
         NameImageModel(
             4,
-            "/data/user/0/com.krishe.govern/cache/EasyImage/ei_16350616333214711314933528090675.jpg",
+            "",
             "Back View",
             true
         )
     )
+    lateinit var view:NewReportCallBack
 
+    fun onViewAvailable(v: NewReportCallBack) {
+        view = v
+    }
     // get edit text layout
     fun getEditTextLayout(context: Context): ConstraintLayout {
         val constraintLayout = ConstraintLayout(context)
@@ -102,13 +113,18 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     var count = 0
+    var countAzr = 0
     fun imageUploadSet(context: Context): Boolean {
+        view.onPrShow()
         if (count == defaultData.size) {
+            Log.e("TAG", "imageUploadSet:defaultData $defaultData")
             return true
         } else {
-            val uri = File(defaultData.get(count).imgPath).toUri() //Uri.parse()
-            val uploadedImage = imageUploadAzure(uri, context,count)
-           // defaultData.get(count).imgPath = uploadedImage
+            if (defaultData.get(count).imgPath.contains("/")) {
+                val uri = File(defaultData.get(count).imgPath).toUri() //Uri.parse()
+                val uploadedImage = imageUploadAzure(uri, context,count)
+                // defaultData.get(count).imgPath = uploadedImage
+            }
             count++
 
             imageUploadSet(context)
@@ -119,7 +135,7 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
     private fun imageUploadAzure(imageUri: Uri, context: Context, count: Int): String {
         var imageName = "Err"
         try {
-            Log.e("TAG", "UploadImage:imageUri $imageUri")
+            //Log.e("TAG", "UploadImage:imageUri $imageUri")
             val imageStream: InputStream = context.contentResolver.openInputStream(imageUri)!!
             val imageLength = imageStream.available()
             //val handler = Handler()
@@ -127,11 +143,9 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
                 try {
                     imageName = ImageManager.UploadImage(imageStream, imageLength)
                     //handler.post {
-                    Log.e(
-                        "TAGSuccess",
-                        "Image Uploaded SuccessfuLly. Name = $imageName count-${count}"
-                    )
+                    //Log.e("TAGSuccess", "Image Uploaded SuccessfuLly. Name = $imageName count-${count}")
                     defaultData.get(count).imgPath = imageName
+                    countAzr++
                     //}
                 } catch (ex: Exception) {
                     val exceptionMessage = ex.message
@@ -169,6 +183,40 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
         th.start()
+    }
+
+    fun addImplement(newReportModelReq: NewReportModelReq) {
+        view.onPrShow()
+        viewModelScope.launch(Dispatchers.IO) {
+            val g = Gson()
+            NetWorkCall.addImplement(this@NewReportViewModel, JSONObject(g.toJson(newReportModelReq)))
+        }
+    }
+
+    fun updateImplement(newReportModelReq: NewReportModelReq) {
+        //view.onPrShow()
+        viewModelScope.launch(Dispatchers.IO) {
+            val g = Gson()
+            NetWorkCall.updateImplement(this@NewReportViewModel, JSONObject(g.toJson(newReportModelReq)))
+        }
+    }
+
+    override fun onError(msg: String) {
+        view.onPrHide()
+        view.onError(msg)
+    }
+
+    override fun onPrHide() {
+        view.onPrHide()
+    }
+
+    override fun onPrShow() {
+        view.onPrShow()
+    }
+
+    override fun onSuccess(msg: String) {
+        view.onPrHide()
+        view.onSuccess(msg)
     }
 
 }

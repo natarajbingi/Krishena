@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,8 +18,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import com.google.gson.JsonObject
 import com.krishe.govern.MainActivity
 import com.krishe.govern.R
 import com.krishe.govern.camera.MainFragment
@@ -29,6 +26,7 @@ import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.GetCurrentGPSLocation
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.utils.KrisheUtils.Companion.checkSinglePermission
+import com.krishe.govern.utils.Sessions
 import com.krishe.govern.views.home.CommunicationCallBack
 import com.krishe.govern.views.newReport.NewReportActivity
 import com.krishe.govern.views.newReport.NewReportModelReq
@@ -55,6 +53,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
     override fun onAttach(context : Context) {
         super.onAttach(context )
         ctx = context
+        sessions = Sessions(context)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -75,12 +74,12 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
             it.findNavController().navigate(action)*/
         }
 
-        Log.d("error", "getExternalStorageDirectory "+Environment.getExternalStorageDirectory());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Log.d("error", "getStorageDirectory "+Environment.getStorageDirectory())
-        };
-        Log.d("error", "getExternalStorageState "+Environment.getExternalStorageState());
-        Log.d("error", "getExternalFilesDir "+ (getActivity()?.getExternalFilesDir("KrishE-World") ?:"nt avaibe" ));
+//        Log.d("error", "getExternalStorageDirectory "+Environment.getExternalStorageDirectory());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            Log.d("error", "getStorageDirectory "+Environment.getStorageDirectory())
+//        };
+//        Log.d("error", "getExternalStorageState "+Environment.getExternalStorageState());
+//        Log.d("error", "getExternalFilesDir "+ (getActivity()?.getExternalFilesDir("KrishE-World") ?:"nt avaibe" ));
 
         binding.refreshImplementButton.setOnClickListener {
             KrisheUtils.toastAction(activity,"will refresh soon with API")
@@ -150,6 +149,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
 
         newReportModelReq.reportTypeID = reportType
         newReportModelReq.reportTypeName = reportType
+        newReportModelReq.userID = "10" //sessions.getUserString("userID").toString()
 
         val intent = Intent(this.context, NewReportActivity::class.java)
         newReportModelReqData.postValue(newReportModelReq)

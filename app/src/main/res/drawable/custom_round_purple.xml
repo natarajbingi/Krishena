@@ -5,7 +5,7 @@
     <solid android:color="#E9A2AD" />
 
     <size
-        android:height="45dp"
-        android:width="45dp" />
+        android:height="@dimen/circle_dp"
+        android:width="@dimen/circle_dp" />
 
 </shape>

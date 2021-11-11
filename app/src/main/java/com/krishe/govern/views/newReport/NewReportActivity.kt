@@ -1,39 +1,39 @@
 package com.krishe.govern.views.newReport
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ActivityNewReportBinding
 import com.krishe.govern.utils.BaseActivity
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.initreport.InitReportFragment.Companion.newReportModelReqData
+import com.krishe.govern.views.reports.ReportsStatusAdapter.ReportsViewHolder.Companion.nameImageModelObj
 import kotlinx.android.synthetic.main.activity_new_report.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.MediaSource
-import java.io.File
 
-class NewReportActivity : BaseActivity(), OnItemClickListener {
+class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack {
 
     private lateinit var viewModel: NewReportViewModel
     lateinit var binding: ActivityNewReportBinding
     private lateinit var adapter: NewReportAdapter
-    private var newReportModelReq: NewReportModelReq = NewReportModelReq("")
+    private lateinit var newReportModelReq: NewReportModelReq
 
     var from: String = ""
     var latitude: Double = 0.0
@@ -55,13 +55,14 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        newReportModelReq = intent.getParcelableExtra("dateModel")!!
+        newReportModelReq = intent.getParcelableExtra<NewReportModelReq>("dateModel")!!
         from = intent.getStringExtra("from").toString()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_report)
         viewModel = ViewModelProvider(this).get(NewReportViewModel::class.java)
         binding.newReportModel = viewModel
 
+        viewModel.onViewAvailable(this)
         onSetEasyImg(false, applicationContext)
         initSetUp()
     }
@@ -77,7 +78,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
 
             if (newReportModelReq.nameImageModel != null && newReportModelReq.nameImageModel.isNotEmpty()) {
                 viewModel.defaultData.clear()
-                viewModel.defaultData.addAll(newReportModelReq.nameImageModel)
+                viewModel.defaultData.addAll(nameImageModelObj(newReportModelReq.nameImageModel))
             }
         }
 
@@ -89,6 +90,15 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
         binding.implementId.text = newReportModelReq.implementID
         binding.implementType.text = newReportModelReq.reportTypeName
         binding.ownerShip.text = newReportModelReq.ownerShip
+
+        binding.reportCommentsEditext.setText(newReportModelReq.reportComment)
+
+        when (newReportModelReq.currentImplementStatus) {
+            "Servicing Required" -> binding.radioButton2.isChecked = true
+            "Major Damage" -> binding.radioButton3.isChecked = true
+            "Replacement required" -> binding.radioButton4.isChecked = true
+            "All OK" -> binding.radioButton5.isChecked = true
+        }
 
         binding.forwardDecisionButton.setOnClickListener {
 
@@ -129,14 +139,29 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
                 } else
                 // todo stepThree
                     if (currentStep == stepThree) {
-                        if (testU) {
-                            viewModel.imageUploadSet(this)
+                        if (KrisheUtils.isOnline(this)) {
+                            if (testU) {
+                                viewModel.imageUploadSet(this)
+                            }
+                            runOnUiThread {
+                                showPbar(this)
+                            }
+                            countAzrCheck() // Thread.sleep time to upload images to azure
+                            val g = Gson()
+                            val toJsonStr = g.toJson(viewModel.defaultData)
+                            newReportModelReq.nameImageModel = toJsonStr
+                            testU = false
+                            if (from == "fragment") {
+                                newReportModelReq.userID = "10" //sessions.getUserString("userID").toString()
+                                viewModel.addImplement(newReportModelReq)
+                            } else {
+                                viewModel.updateImplement(newReportModelReq)
+                                KrisheUtils.toastAction(this, "updateImplement is in progress" )
+                            }
+                            setUpCurrentStepView()
+                        } else {
+                            KrisheUtils.toastAction(this, getString(R.string.no_internet))
                         }
-                        newReportModelReq.nameImageModel = viewModel.defaultData
-                        KrisheUtils.logPrint("Testing class", newReportModelReq, null)
-                        KrisheUtils.toastAction(this, "Report will Submit soon")
-                        viewModel.count = 0
-                        setUpCurrentStepView()
                     }
         }
 
@@ -168,6 +193,17 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
         }
 
         setUpCurrentStepView()
+    }
+
+    private fun countAzrCheck() {
+        Thread.sleep(10000)
+        if (from != "fragment" && viewModel.countAzr == 0) {
+            viewModel.countAzr = viewModel.count
+        }
+        if (viewModel.countAzr == viewModel.defaultData.size) {
+            testU = false
+            return
+        } else countAzrCheck()
     }
 
     private fun setUpCurrentStepView() {
@@ -227,8 +263,8 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
                         viewModel.defaultData.set(adapterPosition, adapterItem!!)
                     }
                     if (direct) {
-                        // adapter.submitList(defaultData)
-                        // adapter.notifyDataSetChanged()
+                        adapter.submitList(viewModel.defaultData)
+                        adapter.notifyDataSetChanged()
                         isNew = false
                         ifShowStepOneImagesLayout()
                     } else {
@@ -398,7 +434,11 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
     private fun onBackPressMethod() {
         when (currentStep) {
             stepThree -> {
-                currentStep = stepTwo
+                if ( binding.backButton.text == "Edit") {
+                    currentStep = stepOne
+                    binding.backButton.text = "Back"
+                } else
+                    currentStep = stepTwo
                 setUpCurrentStepView()
             }
             stepTwo -> {
@@ -423,5 +463,40 @@ class NewReportActivity : BaseActivity(), OnItemClickListener {
         onBackPressMethod()
     }
 
+    override fun onError(msg: String) {
+        hidePbar()
+    }
+
+    override fun onPrHide() {
+        hidePbar()
+    }
+
+    override fun onPrShow() {
+        showPbar(this)
+    }
+
+    override fun onSuccess(msg: String) {
+        hidePbar()
+        runOnUiThread {
+            alertDialogShow(msg, resources.getString(R.string.app_name), R.mipmap.ic_launcher)
+        }
+    }
+
+    fun alertDialogShow(message: String, title: String, icon: Int) {
+        val alertDialog = android.app.AlertDialog.Builder(this)
+        alertDialog.setIcon(icon)
+        alertDialog.setTitle(title)
+        alertDialog.setMessage(message)
+        alertDialog.setNegativeButton(
+            "OK"
+        ) { dialog, which ->
+            dialog.dismiss()
+            finish()
+        }
+        val alert = alertDialog.create()
+
+        // show it
+        alert.show()
+    }
 
 }

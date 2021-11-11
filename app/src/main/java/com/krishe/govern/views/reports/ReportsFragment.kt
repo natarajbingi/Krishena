@@ -49,7 +49,8 @@ class ReportsFragment : BaseFragment() ,ReportsICallBack, DatePickerDialog.OnDat
 
         binding.reportsRecycleView.adapter = adapter
         // adapter.data = data
-        adapter.submitList(data)
+        if (!data.isEmpty())
+            adapter.submitList(data)
 
         //context?.let { KrisheUtils.setSpinnerItems(it,binding.reportsSpinner,spinnerArray) }
         // Spinner ItemClickListener
@@ -68,6 +69,9 @@ class ReportsFragment : BaseFragment() ,ReportsICallBack, DatePickerDialog.OnDat
             adapter.submitList(it)
         })
 
+        binding.SorryTryAgainBut.setOnClickListener {
+            viewModel.getReportsCall()
+        }
         binding.imgDateClickFrom.setOnClickListener {
             imgDate = 0
             val now = Calendar.getInstance()
@@ -101,6 +105,8 @@ class ReportsFragment : BaseFragment() ,ReportsICallBack, DatePickerDialog.OnDat
 
     override fun onError(msg: String) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        binding.reportsRecycleView.visibility = View.GONE
+        binding.SorryTryAgainLayout.visibility = View.VISIBLE
     }
 
     override fun onPrHide() {
@@ -112,6 +118,8 @@ class ReportsFragment : BaseFragment() ,ReportsICallBack, DatePickerDialog.OnDat
     }
 
     override fun onSuccess(list: List<ReportsItemModel>) {
+        binding.reportsRecycleView.visibility = View.VISIBLE
+        binding.SorryTryAgainLayout.visibility = View.GONE
     }
 
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {

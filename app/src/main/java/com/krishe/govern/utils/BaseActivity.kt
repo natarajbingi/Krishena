@@ -34,6 +34,10 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        progressDoalog = ProgressDialog(this);
+        progressDoalog.setTitle(this.getString(R.string.app_name));
+        progressDoalog.setCancelable(false);
+        progressDoalog.setMessage("Please wait....");
     }
 
     open fun showPbar(context: Context) {
@@ -43,8 +47,9 @@ open class BaseActivity : AppCompatActivity() {
             progressDoalog.setCancelable(false);
             progressDoalog.setMessage("Please wait....");
         }
-        progressDoalog.show();
-
+        if (!progressDoalog.isShowing()) {
+             progressDoalog.show();
+        }
     }
 
     open fun hidePbar() {

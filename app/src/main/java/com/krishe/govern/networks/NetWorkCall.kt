@@ -10,6 +10,7 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interceptors.HttpLoggingInterceptor
 import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.androidnetworking.interfaces.StringRequestListener
 import com.google.gson.Gson
 import com.jacksonandroidnetworking.JacksonParserFactory
 import com.krishe.govern.models.Data
@@ -17,6 +18,8 @@ import com.krishe.govern.models.ImplementsDataRes
 import com.krishe.govern.utils.User
 import com.krishe.govern.views.home.InitIReportCallBack
 import com.krishe.govern.views.home.InitIReportCallBackReturn
+import com.krishe.govern.views.newReport.NewReportCallBack
+import com.krishe.govern.views.newReport.NewReportModelReq
 import com.krishe.govern.views.reports.ReportsICallBack
 import com.krishe.govern.views.reports.ReportsItemModel
 import kotlinx.coroutines.Dispatchers
@@ -92,16 +95,19 @@ class NetWorkCall {
 
         private fun getANReqPython(url: String): ANRequest<out ANRequest<*>> {
             return AndroidNetworking.get("$BASE_URL_$url")
-                 .addHeaders("Content-Type", "application/json")
-                 //.addHeaders(API_KEY, KEY)
+                .addHeaders("Content-Type", "application/json")
+                //.addHeaders(API_KEY, KEY)
                 .addHeaders("Accept", "application/json")
                 .setPriority(Priority.MEDIUM)
                 .build()
         }
 
-        private fun postANReqPythonJson(url: String, jsonObject:JSONObject ): ANRequest<out ANRequest<*>> {
+        private fun postANReqPythonJson(
+            url: String,
+            jsonObject: JSONObject
+        ): ANRequest<out ANRequest<*>> {
             return AndroidNetworking.post("$BASE_URL_$url")
-                 .addHeaders("Content-Type", "application/json")
+                .addHeaders("Content-Type", "application/json")
                 //.addHeaders(API_KEY, KEY)
                 .addHeaders("Accept", "application/json")
                 .addJSONObjectBody(jsonObject)
@@ -176,10 +182,10 @@ class NetWorkCall {
             var reportsItemModel: MutableList<ReportsItemModel> = mutableListOf()
             val data: MutableList<Data> = mutableListOf()
             val bodyParamJSON = JSONObject()
-            bodyParamJSON.put("userID","10")
+            bodyParamJSON.put("userID", "10")
             Log.e("TAG", "bodyParamJSON: $bodyParamJSON")
             return withContext(Dispatchers.IO) {
-                postANReqPythonJson("/get_implement",bodyParamJSON)
+                postANReqPythonJson("/get_implement", bodyParamJSON)
                     .getAsJSONArray(object : JSONArrayRequestListener {
                         override fun onResponse(response: JSONArray) {
                             Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
@@ -197,163 +203,70 @@ class NetWorkCall {
                             v.onError("Failed")
                         }
                     })
-                /*, JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject?) {
-                    *//*if (response?.getBoolean("status") == true && response.getString("message") == "Success") {
-
-                    } else {
-
-                    }*//*
-                    v.onSuccess(emptyList())
-                    Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
-                }
-
-                override fun onResponse(response: JSONArray?) {
-                    Log.e("TAG", "onResponseJSONArray: ${response.toString()}")
-                    v.onSuccess(emptyList())
-                }
-
-                override fun onError(anError: ANError?) {
-                    Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
-                    v.onError("Failed")
-                }
-            }*/
                 //return@withContext implementsDataRes
             }
         }
 
-        fun getImplementLists(v: InitIReportCallBack) {
-            AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
-                .addPathParameter("pageNumber", "0")
-                .addQueryParameter("limit", "10")
-                .addHeaders("token", "1234")
-                .setTag("test")
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsJSONArray(object : JSONArrayRequestListener {
-                    override fun onResponse(response: JSONArray?) {
-                        Log.e("TAG", "onResponse: ${response.toString()}")
-                        val data: MutableList<ReportsItemModel> = mutableListOf<ReportsItemModel>()
-                        if (response != null) {
-                            for (i in 0 until response.length()) {
-                                val res = response.getJSONObject(i)
+        suspend fun addImplement(v: NewReportCallBack, newReportModelReq: JSONObject) {
+            //val jArray = JSONArray(newReportModelReq.optString("nameImageModel"))
+            //newReportModelReq.put("nameImageModel", jArray.toString())
+            Log.e("TAG", "newReportModelReq: $newReportModelReq")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson("/add_implement", newReportModelReq)
 
-                            }
-                            // v.onSuccessImplementList(ImplementsDataRes)
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String?) {
+                            Log.e("TAG", "StringRequestListener: ${response.toString()}")
+
+                            v.onSuccess(response.toString())
                         }
-                    }
 
-                    override fun onError(anError: ANError?) {
-                        v.onError("onResponse: ${anError.toString()}")
-                        Log.e("TAG", "onResponse: ${anError.toString()}")
-                        // TODO("Not yet implemented")
-                    }
-
-                })
-        }
-
-        fun getCall(v: ReportsICallBack) {
-            AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
-                .addPathParameter("pageNumber", "0")
-                .addQueryParameter("limit", "10")
-                .addHeaders("token", "1234")
-                .setTag("test")
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsJSONArray(object : JSONArrayRequestListener {
-                    override fun onResponse(response: JSONArray?) {
-                        Log.e("TAG", "onResponse: ${response.toString()}")
-                        val data: MutableList<ReportsItemModel> = mutableListOf<ReportsItemModel>()
-                        if (response != null) {
-
-                            v.onSuccess(data)
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onError("Failed")
                         }
-                    }
-
-                    override fun onError(anError: ANError?) {
-                        v.onError("onResponse: ${anError.toString()}")
-                        Log.e("TAG", "onResponse: ${anError.toString()}")
-                        // TODO("Not yet implemented")
-                    }
-
-                })
-        }
-
-        fun getCallObject(v: ReportsICallBack) {
-
-            val request =
-                AndroidNetworking.get("https://fierce-cove-29863.herokuapp.com/getAllUsers/{pageNumber}")
-                    .addPathParameter("pageNumber", "0")
-                    .addQueryParameter("limit", "10")
-                    .build()
-
-            val response: ANResponse<List<User>> =
-                request.executeForObjectList(User::class.java) as ANResponse<List<User>>
-            if (response.isSuccess) {
-                val data: MutableList<ReportsItemModel> = mutableListOf<ReportsItemModel>()
-                val users: List<User> = response.result
-                for (user in users) {
-
-                }
-                v.onSuccess(data)
-            } else {
-                //handle error
-                v.onError("error: ")
-                Log.e("TAG", "onResponse: ")
+                    })
+                //return@withContext implementsDataRes
             }
         }
 
-        fun getCallObjectpost(v: ReportsICallBack) {
+        suspend fun updateImplement(v: NewReportCallBack, newReportModelReq: JSONObject) {
+            //val jArray = JSONArray(newReportModelReq.optString("nameImageModel"))
+            //newReportModelReq.put("nameImageModel", jArray.toString())
+            Log.e("TAG", "newReportModelReq: $newReportModelReq")
+           /* return withContext(Dispatchers.IO) {
+                postANReqPythonJson("/add_implement", newReportModelReq)
 
-            val jsonObject = JSONObject()
-            try {
-                jsonObject.put("firstname", "Amit")
-                jsonObject.put("lastname", "Shekhar")
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String?) {
+                            Log.e("TAG", "StringRequestListener: ${response.toString()}")
 
-            AndroidNetworking.post("https://fierce-cove-29863.herokuapp.com/createUser")
-                .addJSONObjectBody(jsonObject) // posting json
-                .setTag("test")
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONArray(object : JSONArrayRequestListener {
-                    override fun onResponse(response: JSONArray) {
-                        // do anything with response
-                        Log.e("TAG", "onResponse: ${response.toString()}")
-                        val data: MutableList<ReportsItemModel> = mutableListOf<ReportsItemModel>()
-                        if (response != null) {
-                            for (i in 0 until response.length()) {
-                                val res = response.getJSONObject(i)
-
-                            }
-                            v.onSuccess(data)
+                            v.onSuccess(response.toString())
                         }
 
-                    }
-
-                    override fun onError(error: ANError) {
-                        // handle error
-                        v.onError("onResponse: ${error.toString()}")
-                        Log.e("TAG", "onResponse: ${error.toString()}")
-                    }
-                })
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onError("Failed")
+                        }
+                    })
+                //return@withContext implementsDataRes
+            }*/
+            v.onSuccess("newReportModelReq")
         }
-
 
     }// companion object over
+
     private fun convertCode1() {
         AndroidNetworking.post("https://www.yantralive.com/newapi/email_change.php")
             .addHeaders("Mobile", "8527801400")
-            .addHeaders("Content-Type","application/x-www-form-urlencoded;charset=UTF8")
-            .addHeaders("Authorization","Bearer 2d71d4f37225f16f317b79dbb89cf1e79e66681f")
+            .addHeaders("Content-Type", "application/x-www-form-urlencoded;charset=UTF8")
+            .addHeaders("Authorization", "Bearer 2d71d4f37225f16f317b79dbb89cf1e79e66681f")
             .setContentType("application/json; charset=utf-8")
             .setTag("convert")
             .setPriority(Priority.MEDIUM)
             .addUrlEncodeFormBodyParameter("newmail", "jmi.mohsin1@gmail.com")
             .build()
-            .getAsJSONObject(object : JSONObjectRequestListener{
+            .getAsJSONObject(object : JSONObjectRequestListener {
                 override fun onResponse(response: JSONObject?) {
                     println(response.toString())
                 }

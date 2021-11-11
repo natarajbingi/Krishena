@@ -4,37 +4,45 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class NewReportModelReq(var implementID: String) : Parcelable {
+    var id: String = ""
     var implementName: String = ""
+    var userID: String = ""
     var reportTypeID: String = ""
     var reportTypeName: String = ""
     var ownerShip: String = ""
     var latitude: String = "0.0"
     var longitude: String = "0.0"
-    var nameImageModel: List<NameImageModel> = emptyList()
+    var nameImageModel:  String = "" //List<NameImageModel> = emptyList()
     var currentImplementStatus: String = ""
     var reportComment: String = ""
 
     constructor(parcel: Parcel) : this(parcel.readString().toString()) {
+        id = parcel.readString().toString()
         implementName = parcel.readString().toString()
+        userID = parcel.readString().toString()
         reportTypeID = parcel.readString().toString()
         reportTypeName = parcel.readString().toString()
         ownerShip = parcel.readString().toString()
-        currentImplementStatus = parcel.readString().toString()
-        reportComment = parcel.readString().toString()
         latitude = parcel.readString().toString()
         longitude = parcel.readString().toString()
+        nameImageModel = parcel.readString().toString()
+        currentImplementStatus = parcel.readString().toString()
+        reportComment = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(implementID)
+        parcel.writeString(id)
         parcel.writeString(implementName)
+        parcel.writeString(userID)
         parcel.writeString(reportTypeID)
         parcel.writeString(reportTypeName)
         parcel.writeString(ownerShip)
-        parcel.writeString(currentImplementStatus)
-        parcel.writeString(reportComment)
         parcel.writeString(latitude)
         parcel.writeString(longitude)
+        parcel.writeString(nameImageModel)
+        parcel.writeString(currentImplementStatus)
+        parcel.writeString(reportComment)
     }
 
     override fun describeContents(): Int {
@@ -55,6 +63,8 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
         return  "NewReportModelReq(implementID=$implementID, implementName='$implementName'," +
                 " reportTypeID='$reportTypeID'," +
                 " reportTypeName='$reportTypeName'," +
+                " id='$id'," +
+                " userID='$userID'," +
                 " ownerShip='$ownerShip'," +
                 " latitude='$latitude'" +
                 " longitude='$longitude'" +

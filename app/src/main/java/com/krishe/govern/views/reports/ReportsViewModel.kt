@@ -36,9 +36,9 @@ class ReportsViewModel(application: Application) : AndroidViewModel(application)
 
     override fun onSuccess(list: List<ReportsItemModel>) {
         view.onPrHide()
-       // Log.e(ReportsFragment.TAG, "onSuccess: ${list[0].reportName}" )
+        view.onSuccess(list)
+        // Log.e(ReportsFragment.TAG, "onSuccess: ${list[0].reportName}" )
         data.postValue(list)
-        //view.onSuccess(list)
     }
     override fun onPrHide() {
     }

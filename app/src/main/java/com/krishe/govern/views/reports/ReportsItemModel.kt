@@ -1,7 +1,5 @@
 package com.krishe.govern.views.reports
 
-import org.json.JSONObject
-
 data class ReportsItemModel(
     val id: Int,
     val userID: String,

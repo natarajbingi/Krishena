@@ -96,6 +96,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
     }
 
     private fun checkListSetUp() {
+        sessions.setUserString("userID","10")
+
         val checkDate: String? = sessions.getUserString( KrisheUtils.oldProcessingDate)
         if (checkDate == null || !KrisheUtils.DATETIME("nope").equals(checkDate)) {
             if (KrisheUtils.isOnline(ctx)) {

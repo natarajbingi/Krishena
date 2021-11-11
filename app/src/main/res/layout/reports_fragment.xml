@@ -116,6 +116,42 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/report_item" />
 
+        <LinearLayout
+            android:id="@+id/SorryTryAgainLayout"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="75dp"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="105dp"
+                android:src="@drawable/ic_failed_24"
+                android:layout_height="105dp"/>
+            <TextView
+                android:id="@+id/SorryTryAgainText"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:padding="5dp"
+                android:text="Sorry try again"
+                android:gravity="center"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                style="@style/removeButton"
+                android:id="@+id/SorryTryAgainBut"
+                android:layout_width="wrap_content"
+                android:text="Reload"
+                android:textSize="20sp"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
     </LinearLayout>
 </layout>

@@ -60,10 +60,10 @@ class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
             itemBinding.reportDate.text = formatter.format(date)
             itemBinding.typeName.text = item.reportTypeName
             itemBinding.reportStatusIcon.background = when (item.reportStatusForApproval) {
-                "Submitted","Not Approved" -> itemView.context.getDrawable(R.drawable.custom_round_orange)
+                "Submitted","Submittted","Not Approved" -> itemView.context.getDrawable(R.drawable.custom_round_orange)
                 "Follow-up" -> itemView.context.getDrawable(R.drawable.custom_round_purple)
                 "Approved" -> itemView.context.getDrawable(R.drawable.custom_round_green)
-                else -> itemView.context.getDrawable(R.drawable.custom_round_green)
+                else -> itemView.context.getDrawable(R.drawable.custom_round_orange)
             }
 
             itemView.setOnClickListener {
@@ -78,29 +78,22 @@ class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
             }
 
             itemBinding.viewReportClick.setOnClickListener {
-                KrisheUtils.toastAction(itemView.context, "Go Next page")
+                KrisheUtils.toastAction(itemView.context, "Go View page")
 
                 val newReportModelReq = NewReportModelReq(item.implementID)
-                newReportModelReq.implementID = item.implementID
+                newReportModelReq.id = item.id.toString()
                 newReportModelReq.implementName = item.implementName
                 newReportModelReq.reportTypeID = item.reportTypeId
                 newReportModelReq.reportTypeName = item.reportTypeName
                 newReportModelReq.ownerShip = item.ownerShip
                 newReportModelReq.latitude = item.latitude
                 newReportModelReq.longitude = item.longitude
-                val gson = Gson()
-                val data: Array<NameImageModel> = gson.fromJson(
-                    item.nameImageModel,
-                    Array<NameImageModel>::class.java
-                )
-                newReportModelReq.nameImageModel = data.toList()
+                newReportModelReq.nameImageModel =  item.nameImageModel
+                newReportModelReq.reportComment =  item.reportComment
+                newReportModelReq.currentImplementStatus =  item.currentImplementStatus
+                newReportModelReq.userID =  item.userID
 
                 val intent = Intent(itemView.context, NewReportActivity::class.java)
-                /*intent.putExtra("implementListID", "implementListID")
-                intent.putExtra("reportType", "reportType")
-                intent.putExtra("latitude", "latitude")
-                intent.putExtra("longitude", "longitude")
-                intent.putExtra("from", "recycle")*/
                 intent.putExtra("dateModel", newReportModelReq)
                 intent.putExtra("from", "listAdapter")
                 itemView.context.startActivity(intent)
@@ -118,6 +111,16 @@ class ReportsStatusAdapter(val listener: ReportsAdapterListener) :
                     ReportItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 return ReportsViewHolder(binding)
             }
+
+            fun nameImageModelObj(nameImageModel:String): List<NameImageModel> {
+                val gson = Gson()
+                val data: Array<NameImageModel> = gson.fromJson(
+                    nameImageModel,
+                    Array<NameImageModel>::class.java
+                )
+                return data.toList()
+            }
+
         }
     }
 

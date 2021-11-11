@@ -8,7 +8,7 @@
         android:width="2dp"
         android:color="#28B2A5"/>
     <size
-        android:height="45dp"
-        android:width="45dp" />
+        android:height="@dimen/circle_dp"
+        android:width="@dimen/circle_dp" />
 
 </shape>
