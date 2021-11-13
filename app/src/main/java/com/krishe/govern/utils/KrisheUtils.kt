@@ -32,6 +32,7 @@ class KrisheUtils {
     companion object{
         val ProcessingDate = "ProcessingDate"
         val oldProcessingDate = "oldProcessingDate"
+        val userID = "userID"
         val implementListSession = "implementListSession"
         val locationSwitch = "locationSwitch"
 

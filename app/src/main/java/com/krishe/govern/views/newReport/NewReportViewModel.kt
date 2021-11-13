@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -13,21 +14,24 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.krishe.govern.imgAzure.ImageManager
 import com.krishe.govern.networks.NetWorkCall
-import com.krishe.govern.views.reports.ReportsICallBack
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
+import java.util.concurrent.Executors
 
-class NewReportViewModel(application: Application) : AndroidViewModel(application),NewReportCallBack {
+
+class NewReportViewModel(application: Application) : AndroidViewModel(application),
+    NewReportCallBack {
 
     var defaultData = mutableListOf(
         NameImageModel(
@@ -61,7 +65,12 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
             true
         )
     )
-    lateinit var view:NewReportCallBack
+
+    lateinit var view: NewReportCallBack
+    var count = 0
+    var countAzr = 0
+    var countAzrVV = MutableLiveData<Int>()
+
 
     fun onViewAvailable(v: NewReportCallBack) {
         view = v
@@ -112,24 +121,33 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
         super.onCleared()
     }
 
-    var count = 0
-    var countAzr = 0
     fun imageUploadSet(context: Context): Boolean {
         view.onPrShow()
-        if (count == defaultData.size) {
-            Log.e("TAG", "imageUploadSet:defaultData $defaultData")
-            return true
-        } else {
-            if (defaultData.get(count).imgPath.contains("/")) {
-                val uri = File(defaultData.get(count).imgPath).toUri() //Uri.parse()
-                val uploadedImage = imageUploadAzure(uri, context,count)
-                // defaultData.get(count).imgPath = uploadedImage
+        var boo = false
+        Executors.newSingleThreadExecutor().execute {
+            val mainHandler = Handler(Looper.getMainLooper())
+            //sync calculations
+            mainHandler.post {
+                if (count == defaultData.size) {
+                    //Log.e("TAG", "imageUploadSet:defaultData $defaultData")
+                    boo = true
+                } else {
+                    if (defaultData.get(count).imgPath.contains("/")) { // to check whether the img already uploaded or not..
+                        val uri = File(defaultData.get(count).imgPath).toUri() //Uri.parse()
+                        val uploadedImage = imageUploadAzure(uri, context, count)
+                        // defaultData.get(count).imgPath = uploadedImage
+                    } else {
+                        countAzr++
+                        countAzrVV.postValue(countAzr)
+                    }
+                    count++
+                    //Log.e("TAG", "imageUploadSet:count $count : $countAzr")
+                    imageUploadSet(context)
+                    boo = false
+                }
             }
-            count++
-
-            imageUploadSet(context)
-            return false
         }
+        return boo
     }
 
     private fun imageUploadAzure(imageUri: Uri, context: Context, count: Int): String {
@@ -138,20 +156,16 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
             //Log.e("TAG", "UploadImage:imageUri $imageUri")
             val imageStream: InputStream = context.contentResolver.openInputStream(imageUri)!!
             val imageLength = imageStream.available()
-            //val handler = Handler()
             val th = Thread {
                 try {
                     imageName = ImageManager.UploadImage(imageStream, imageLength)
-                    //handler.post {
                     //Log.e("TAGSuccess", "Image Uploaded SuccessfuLly. Name = $imageName count-${count}")
                     defaultData.get(count).imgPath = imageName
                     countAzr++
-                    //}
+                    countAzrVV.postValue(countAzr)
                 } catch (ex: Exception) {
                     val exceptionMessage = ex.message
-                    //handler.post {
                     Log.e("TAGErr", "$exceptionMessage")
-                    // }
                 }
             }
             th.start()
@@ -189,15 +203,21 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
         view.onPrShow()
         viewModelScope.launch(Dispatchers.IO) {
             val g = Gson()
-            NetWorkCall.addImplement(this@NewReportViewModel, JSONObject(g.toJson(newReportModelReq)))
+            NetWorkCall.addImplement(
+                this@NewReportViewModel,
+                JSONObject(g.toJson(newReportModelReq))
+            )
         }
     }
 
     fun updateImplement(newReportModelReq: NewReportModelReq) {
-        //view.onPrShow()
+        view.onPrShow()
         viewModelScope.launch(Dispatchers.IO) {
             val g = Gson()
-            NetWorkCall.updateImplement(this@NewReportViewModel, JSONObject(g.toJson(newReportModelReq)))
+            NetWorkCall.updateImplement(
+                this@NewReportViewModel,
+                JSONObject(g.toJson(newReportModelReq))
+            )
         }
     }
 

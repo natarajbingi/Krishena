@@ -1,6 +1,5 @@
 package com.krishe.govern.views.newReport
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.view.View
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -19,6 +19,7 @@ import com.krishe.govern.R
 import com.krishe.govern.databinding.ActivityNewReportBinding
 import com.krishe.govern.utils.BaseActivity
 import com.krishe.govern.utils.KrisheUtils
+import com.krishe.govern.utils.OnItemClickListener
 import com.krishe.govern.views.initreport.InitReportFragment.Companion.newReportModelReqData
 import com.krishe.govern.views.reports.ReportsStatusAdapter.ReportsViewHolder.Companion.nameImageModelObj
 import kotlinx.android.synthetic.main.activity_new_report.*
@@ -140,30 +141,40 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 // todo stepThree
                     if (currentStep == stepThree) {
                         if (KrisheUtils.isOnline(this)) {
-                            if (testU) {
-                                viewModel.imageUploadSet(this)
-                            }
-                            runOnUiThread {
-                                showPbar(this)
-                            }
-                            countAzrCheck() // Thread.sleep time to upload images to azure
-                            val g = Gson()
-                            val toJsonStr = g.toJson(viewModel.defaultData)
-                            newReportModelReq.nameImageModel = toJsonStr
-                            testU = false
-                            if (from == "fragment") {
-                                newReportModelReq.userID = "10" //sessions.getUserString("userID").toString()
-                                viewModel.addImplement(newReportModelReq)
-                            } else {
-                                viewModel.updateImplement(newReportModelReq)
-                                KrisheUtils.toastAction(this, "updateImplement is in progress" )
-                            }
-                            setUpCurrentStepView()
+                            if (from == "fragment")
+                                confirmAlertDialog("Are you sure want to Submit the Implement?")
+                            else
+                                confirmAlertDialog("Are you sure want to update the Implement?")
                         } else {
                             KrisheUtils.toastAction(this, getString(R.string.no_internet))
                         }
                     }
         }
+
+        viewModel.countAzrVV.observe(this, Observer {
+
+            if (from != "fragment" && viewModel.countAzr == 0) {
+                viewModel.countAzr = viewModel.count
+            }
+            if (viewModel.countAzr == viewModel.defaultData.size) {
+                testU = false
+
+                val g = Gson()
+                val toJsonStr = g.toJson(viewModel.defaultData)
+                newReportModelReq.nameImageModel = toJsonStr
+                testU = false
+                if (from == "fragment") {
+                    newReportModelReq.userID = sessions.getUserString(KrisheUtils.userID).toString()
+                    viewModel.addImplement(newReportModelReq)
+                } else {
+                    viewModel.updateImplement(newReportModelReq)
+                    //KrisheUtils.toastAction(this, "updateImplement is in progress" )
+                }
+                setUpCurrentStepView()
+            }
+
+
+        })
 
         // Other images to add
         binding.imgAddView.setOnClickListener {
@@ -193,17 +204,6 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
         }
 
         setUpCurrentStepView()
-    }
-
-    private fun countAzrCheck() {
-        Thread.sleep(10000)
-        if (from != "fragment" && viewModel.countAzr == 0) {
-            viewModel.countAzr = viewModel.count
-        }
-        if (viewModel.countAzr == viewModel.defaultData.size) {
-            testU = false
-            return
-        } else countAzrCheck()
     }
 
     private fun setUpCurrentStepView() {
@@ -337,6 +337,21 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
         }
     }
 
+    private fun confirmAlertDialog(msg: String) {
+            AlertDialog.Builder(this)
+                .setIcon(R.mipmap.ic_launcher)
+                .setTitle(R.string.app_name)
+                .setMessage(msg)
+                .setPositiveButton(getString(R.string.yes),
+                    DialogInterface.OnClickListener { dialog, which ->
+
+                        viewModel.imageUploadSet(this)
+                    })
+                .setNegativeButton(getString(R.string.no), null)
+                .show()
+
+    }
+
     private fun askNameForImgAlertBox() {
         val builder = MaterialAlertDialogBuilder(this)
         // dialog title
@@ -434,7 +449,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     private fun onBackPressMethod() {
         when (currentStep) {
             stepThree -> {
-                if ( binding.backButton.text == "Edit") {
+                if (binding.backButton.text == "Edit") {
                     currentStep = stepOne
                     binding.backButton.text = "Back"
                 } else
@@ -446,6 +461,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 setUpCurrentStepView()
             }
             stepOne -> {
+                setResult(0)
                 super.onBackPressed()
             }
         }
@@ -482,7 +498,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
         }
     }
 
-    fun alertDialogShow(message: String, title: String, icon: Int) {
+    private fun alertDialogShow(message: String, title: String, icon: Int) {
         val alertDialog = android.app.AlertDialog.Builder(this)
         alertDialog.setIcon(icon)
         alertDialog.setTitle(title)
@@ -491,6 +507,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
             "OK"
         ) { dialog, which ->
             dialog.dismiss()
+            setResult(1)
             finish()
         }
         val alert = alertDialog.create()

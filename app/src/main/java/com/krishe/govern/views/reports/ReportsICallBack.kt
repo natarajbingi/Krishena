@@ -5,4 +5,5 @@ interface ReportsICallBack {
     fun onPrHide()
     fun onPrShow()
     fun onSuccess(list: List<ReportsItemModel>)
+    fun onRemoveSuccess(msg: String)
 }

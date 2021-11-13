@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.ANRequest
-import com.androidnetworking.common.ANResponse
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interceptors.HttpLoggingInterceptor
@@ -15,11 +14,8 @@ import com.google.gson.Gson
 import com.jacksonandroidnetworking.JacksonParserFactory
 import com.krishe.govern.models.Data
 import com.krishe.govern.models.ImplementsDataRes
-import com.krishe.govern.utils.User
-import com.krishe.govern.views.home.InitIReportCallBack
 import com.krishe.govern.views.home.InitIReportCallBackReturn
 import com.krishe.govern.views.newReport.NewReportCallBack
-import com.krishe.govern.views.newReport.NewReportModelReq
 import com.krishe.govern.views.reports.ReportsICallBack
 import com.krishe.govern.views.reports.ReportsItemModel
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +24,6 @@ import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -36,15 +31,20 @@ import java.util.concurrent.TimeUnit
 
 class NetWorkCall {
     companion object {
-        val cacheSize = 5 * 1024 * 1024 // 5 MB size
+        private val cacheSize = 5 * 1024 * 1024 // 5 MB size
 
-        const val BASE_URL = "https://krishe-rental.azurewebsites.net"
-        const val BASE_URL_ = "http://krisheapp.pythonanywhere.com"
-        val API_KEY = "ApiKey"
-        val KEY = "WqvL33dHhSNs1AjUZPJjv8zJ8J1iD3qE"
-        val HEADER_CACHE_CONTROL = "Cache-Control"
-        val HEADER_PRAGMA = "Pragma"
-//        val bodyParameterMap: MutableMap<String, String> = mutableMapOf()
+        private const val BASE_URL = "https://krishe-rental.azurewebsites.net"
+        private const val BASE_URL_ = "http://krisheapp.pythonanywhere.com"
+        private const val API_KEY = "ApiKey"
+        private const val KEY = "WqvL33dHhSNs1AjUZPJjv8zJ8J1iD3qE"
+        private const val HEADER_CACHE_CONTROL = "Cache-Control"
+        private const val HEADER_PRAGMA = "Pragma"
+        private const val governanceImplements = "/governance/implements/"
+        private const val GET_IMPLEMENT = "/get_implement"
+        private const val ADD_IMPLEMENT = "/add_implement"
+        private const val UPDATE_IMPLEMENT = "/update_implement"
+        private const val REMOVE_IMPLEMENT = "/remove_implement"
+        private const val DELETE_IMPLEMENT = "/delete_implement"
 
         fun NetworkingSetup(context: Context) {
 
@@ -85,6 +85,7 @@ class NetWorkCall {
         }
 
         private fun getANReqAzure(url: String): ANRequest<out ANRequest<*>> {
+            Log.e("TAG", "postANReqPythonJson: $BASE_URL$url", )
             return AndroidNetworking.get("$BASE_URL$url")
                 .addHeaders("Content-Type", "application/json")
                 .addHeaders(API_KEY, KEY)
@@ -102,10 +103,8 @@ class NetWorkCall {
                 .build()
         }
 
-        private fun postANReqPythonJson(
-            url: String,
-            jsonObject: JSONObject
-        ): ANRequest<out ANRequest<*>> {
+        private fun postANReqPythonJson(url: String, jsonObject: JSONObject): ANRequest<out ANRequest<*>> {
+            Log.e("TAG", "postANReqPythonJson: $BASE_URL_$url", )
             return AndroidNetworking.post("$BASE_URL_$url")
                 .addHeaders("Content-Type", "application/json")
                 //.addHeaders(API_KEY, KEY)
@@ -119,7 +118,7 @@ class NetWorkCall {
             var implementsDataRes: ImplementsDataRes? = null
             val data: MutableList<Data> = mutableListOf()
             return withContext(Dispatchers.IO) {
-                getANReqAzure("/governance/implements/")
+                getANReqAzure(governanceImplements)
                     .getAsJSONObject(object : JSONArrayRequestListener, JSONObjectRequestListener {
                         override fun onResponse(response: JSONObject?) {
                             if (response?.getBoolean("status") == true && response.getString("message") == "Success") {
@@ -178,24 +177,25 @@ class NetWorkCall {
             }
         }
 
-        suspend fun getMySavedImplements(v: ReportsICallBack) {
-            var reportsItemModel: MutableList<ReportsItemModel> = mutableListOf()
-            val data: MutableList<Data> = mutableListOf()
-            val bodyParamJSON = JSONObject()
-            bodyParamJSON.put("userID", "10")
-            Log.e("TAG", "bodyParamJSON: $bodyParamJSON")
+        suspend fun getMyImplements(v: ReportsICallBack, getImplParam : JSONObject) {
+            val reportsItemModel: MutableList<ReportsItemModel> = mutableListOf()
+            Log.e("TAG", "getMyImplements param: $getImplParam")
             return withContext(Dispatchers.IO) {
-                postANReqPythonJson("/get_implement", bodyParamJSON)
-                    .getAsJSONArray(object : JSONArrayRequestListener {
-                        override fun onResponse(response: JSONArray) {
+                postANReqPythonJson(GET_IMPLEMENT, getImplParam)
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject) {
                             Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
-                            val gson = Gson()
-                            val data: Array<ReportsItemModel> = gson.fromJson(
-                                response.toString(),
-                                Array<ReportsItemModel>::class.java
-                            )
-                            reportsItemModel.addAll(data)
-                            v.onSuccess(reportsItemModel)
+                            if(response.optString("Success") == "true"){
+                                val gson = Gson()
+                                val data: Array<ReportsItemModel> = gson.fromJson(
+                                    response.optJSONArray("data").toString(),
+                                    Array<ReportsItemModel>::class.java
+                                )
+                                reportsItemModel.addAll(data)
+                                v.onSuccess(reportsItemModel)
+                            } else {
+                                v.onError( response.optString("data").toString())
+                            }
                         }
 
                         override fun onError(anError: ANError?) {
@@ -203,16 +203,13 @@ class NetWorkCall {
                             v.onError("Failed")
                         }
                     })
-                //return@withContext implementsDataRes
             }
         }
 
-        suspend fun addImplement(v: NewReportCallBack, newReportModelReq: JSONObject) {
-            //val jArray = JSONArray(newReportModelReq.optString("nameImageModel"))
-            //newReportModelReq.put("nameImageModel", jArray.toString())
-            Log.e("TAG", "newReportModelReq: $newReportModelReq")
+        suspend fun addImplement(v: NewReportCallBack, addNewParam: JSONObject) {
+            Log.e("TAG", "add newReportModelReq: $addNewParam")
             return withContext(Dispatchers.IO) {
-                postANReqPythonJson("/add_implement", newReportModelReq)
+                postANReqPythonJson(ADD_IMPLEMENT, addNewParam)
 
                     .getAsString(object : StringRequestListener {
                         override fun onResponse(response: String?) {
@@ -226,16 +223,13 @@ class NetWorkCall {
                             v.onError("Failed")
                         }
                     })
-                //return@withContext implementsDataRes
             }
         }
 
-        suspend fun updateImplement(v: NewReportCallBack, newReportModelReq: JSONObject) {
-            //val jArray = JSONArray(newReportModelReq.optString("nameImageModel"))
-            //newReportModelReq.put("nameImageModel", jArray.toString())
-            Log.e("TAG", "newReportModelReq: $newReportModelReq")
-           /* return withContext(Dispatchers.IO) {
-                postANReqPythonJson("/add_implement", newReportModelReq)
+        suspend fun updateImplement(v: NewReportCallBack, updateParam: JSONObject) {
+            Log.e("TAG", "update newReportModelReq: $updateParam")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson(UPDATE_IMPLEMENT, updateParam)
 
                     .getAsString(object : StringRequestListener {
                         override fun onResponse(response: String?) {
@@ -249,33 +243,49 @@ class NetWorkCall {
                             v.onError("Failed")
                         }
                     })
-                //return@withContext implementsDataRes
-            }*/
-            v.onSuccess("newReportModelReq")
+            }
+        }
+
+        suspend fun removeImplement(v: ReportsICallBack, removeParam: JSONObject) {
+            Log.e("TAG", "remove newReportModelReq: $removeParam")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson(REMOVE_IMPLEMENT, removeParam)
+
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String?) {
+                            Log.e("TAG", "StringRequestListener: ${response.toString()}")
+
+                            v.onRemoveSuccess(response.toString())
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onError("Failed")
+                        }
+                    })
+            }
+        }
+
+        suspend fun deleteImplement(v: NewReportCallBack, deleteParam: JSONObject) {
+            Log.e("TAG", "delete newReportModelReq: $deleteParam")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson(DELETE_IMPLEMENT, deleteParam)
+                    .getAsString(object : StringRequestListener {
+                        override fun onResponse(response: String?) {
+                            Log.e("TAG", "StringRequestListener: ${response.toString()}")
+
+                            v.onSuccess(response.toString())
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onError("Failed")
+                        }
+                    })
+            }
         }
 
     }// companion object over
-
-    private fun convertCode1() {
-        AndroidNetworking.post("https://www.yantralive.com/newapi/email_change.php")
-            .addHeaders("Mobile", "8527801400")
-            .addHeaders("Content-Type", "application/x-www-form-urlencoded;charset=UTF8")
-            .addHeaders("Authorization", "Bearer 2d71d4f37225f16f317b79dbb89cf1e79e66681f")
-            .setContentType("application/json; charset=utf-8")
-            .setTag("convert")
-            .setPriority(Priority.MEDIUM)
-            .addUrlEncodeFormBodyParameter("newmail", "jmi.mohsin1@gmail.com")
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener {
-                override fun onResponse(response: JSONObject?) {
-                    println(response.toString())
-                }
-
-                override fun onError(error: ANError?) {
-                    println(error.toString())
-                }
-            })
-    }
 
 }
 

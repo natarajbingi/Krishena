@@ -8,6 +8,7 @@
     <string name="this_fy">This FY</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="ok">OK</string>
     <string name="add_new_implement_report">Add new Implement Report</string>
     <string name="select_implement_from_list">Select implement from List</string>
     <string name="if_implement_is_not_available_please_refresh_list">* if implement is not available, please refresh List</string>

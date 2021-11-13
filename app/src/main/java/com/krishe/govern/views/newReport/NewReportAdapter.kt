@@ -1,5 +1,7 @@
 package com.krishe.govern.views.newReport
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Handler
@@ -16,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ImgaeLayoutBinding
 import com.krishe.govern.imgAzure.ImageManager
+import com.krishe.govern.utils.OnItemClickListener
 import com.krishe.govern.views.reports.ReportsFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -41,6 +44,7 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
         holder.bindNewReport(item)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     inner class NewReportViewHolder(private val itemBinding: ImgaeLayoutBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
@@ -52,25 +56,14 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
             if (item.imgPath.isNotEmpty()) {
                 itemBinding.locationPosiRemove.visibility = View.VISIBLE
                 if (item.imgPath.contains("/")) {
-                    val imgPath = File(item.imgPath)
-                    Glide.with(itemView.context)
-                        .load(imgPath)
-                        .centerCrop()
-                        .placeholder(R.drawable.loader)
-                        .error(R.drawable.blankimge)
-                        .into(itemBinding.imgView)
+                    glideImgLoad(item.imgPath,itemBinding.imgView,0)
                 } else  {
+                    glideImgLoad(item.imgPath,itemBinding.imgView,2)
                     loadImgViewDwnAzure(item.imgPath, itemBinding.imgView)
                 }
             } else {
                 itemBinding.locationPosiRemove.visibility = View.GONE
                 itemBinding.imgView.setImageDrawable(itemView.context.getDrawable(R.drawable.image_upload))
-                /*Glide.with(itemView.context)
-                    .load(f)
-                    .centerCrop()
-                    .placeholder(R.drawable.loader)
-                    .error(R.drawable.blankimge)
-                    .into(itemBinding.imgView)*/
             }
 
             itemBinding.executePendingBindings()
@@ -87,6 +80,22 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
         }
     }
 
+    fun glideImgLoad(imgPath: String, imgView: ImageView, imgType:Int) {
+        val imgPathFile = when(imgType){
+            0 -> File(imgPath)
+            else -> imgPath
+        }
+        try {
+            Glide.with(imgView.context)
+                .load(imgPathFile)
+                .centerCrop()
+                .placeholder(R.drawable.loader)
+                .error(R.drawable.blankimge)
+                .into(imgView)
+        } catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
     // override fun getItemCount(): Int = data.size // ListAdapter will handle
 
     class NewReportDiffCallback : DiffUtil.ItemCallback<NameImageModel>() {
@@ -119,7 +128,7 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
                             .placeholder(R.drawable.loader)
                             .error(R.drawable.blankimge)
                             .into(imageView)
-                    } catch (e:Exception ){
+                    } catch (e:Exception){
                         e.printStackTrace()
                     }
                 }
@@ -134,8 +143,3 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
     }
 }
 
-interface OnItemClickListener {
-    fun onItemClick(item: NameImageModel, position: Int)
-
-    fun onItemRemove(item: NameImageModel, position: Int)
-}

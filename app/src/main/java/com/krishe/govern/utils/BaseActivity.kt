@@ -29,6 +29,7 @@ open class BaseActivity : AppCompatActivity() {
     var photos: ArrayList<MediaFile> = ArrayList<MediaFile>()
     var easyImage: EasyImage? = null
     val PHOTOS_KEY = "easy_image_photos_list"
+    open lateinit var sessions: Sessions
 
     lateinit var progressDoalog: ProgressDialog
 
@@ -38,6 +39,8 @@ open class BaseActivity : AppCompatActivity() {
         progressDoalog.setTitle(this.getString(R.string.app_name));
         progressDoalog.setCancelable(false);
         progressDoalog.setMessage("Please wait....");
+
+        sessions = Sessions(this)
     }
 
     open fun showPbar(context: Context) {

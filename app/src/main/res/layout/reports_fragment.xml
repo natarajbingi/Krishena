@@ -11,9 +11,9 @@
     </data>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".views.reports.ReportsFragment">
 
 
@@ -26,21 +26,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:text="@string/view_reports"
-                style="@style/header_title_text"/>
+                style="@style/header_title_text"
+                android:text="@string/view_reports" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -64,11 +64,12 @@
                     android:layout_weight="0.2"
                     android:src="@drawable/calender" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -95,23 +96,41 @@
             </LinearLayout>
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/reportsSpinner"
-            style="@style/spinner_style"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:entries="@array/reportsArray"
-            android:layout_gravity="end"/>
+            android:orientation="horizontal">
 
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/reportsSpinner"
+                style="@style/spinner_style"
+                android:layout_width="0dp"
+                android:layout_margin="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:entries="@array/reportsTypeArray" />
+
+            <TextView
+                android:id="@+id/filter_get"
+                style="@style/scannerButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:src="@drawable/calender"
+                android:text="Go" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/reportsRecycleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/report_item" />
@@ -119,37 +138,38 @@
         <LinearLayout
             android:id="@+id/SorryTryAgainLayout"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone"
+            android:layout_height="wrap_content"
             android:layout_marginTop="75dp"
-            android:layout_height="wrap_content">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="105dp"
-                android:src="@drawable/ic_failed_24"
-                android:layout_height="105dp"/>
+                android:layout_height="105dp"
+                android:src="@drawable/ic_failed_24" />
+
             <TextView
                 android:id="@+id/SorryTryAgainText"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:gravity="center"
                 android:padding="5dp"
                 android:text="Sorry try again"
-                android:gravity="center"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
             <TextView
-                style="@style/removeButton"
                 android:id="@+id/SorryTryAgainBut"
+                style="@style/removeButton"
                 android:layout_width="wrap_content"
-                android:text="Reload"
-                android:textSize="20sp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/black"
                 android:padding="10dp"
-                android:layout_height="wrap_content"/>
+                android:text="Reload"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
 
         </LinearLayout>
