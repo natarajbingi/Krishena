@@ -17,7 +17,6 @@ import com.krishe.govern.R
 import com.krishe.govern.databinding.ReportsFragmentBinding
 import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.KrisheUtils
-import com.krishe.govern.utils.OnReportItemClickListener
 import com.krishe.govern.views.newReport.NewReportActivity
 import com.krishe.govern.views.newReport.NewReportModelReq
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog

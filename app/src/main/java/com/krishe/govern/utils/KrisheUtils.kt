@@ -1,10 +1,9 @@
 package com.krishe.govern.utils
 
-import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.LocationManager
@@ -16,6 +15,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat
 import com.google.gson.Gson
@@ -29,27 +29,28 @@ import java.util.*
 
 
 class KrisheUtils {
-    companion object{
-        val ProcessingDate = "ProcessingDate"
-        val oldProcessingDate = "oldProcessingDate"
-        val userID = "userID"
-        val implementListSession = "implementListSession"
-        val locationSwitch = "locationSwitch"
+    companion object {
+        const val oldProcessingDate = "oldProcessingDate"
+        const val userID = "userID"
+        const val implementListSession = "implementListSession"
+        const val locationSwitch = "locationSwitch"
 
-        fun setSpinnerItems(context: Context, spinner : Spinner,spinnerArray: Array<String>){
+        fun setSpinnerItems(context: Context, spinner: Spinner, spinnerArray: Array<String>) {
 
-            val aa = ArrayAdapter(context, R.layout.simple_spinner_item, spinnerArray)
+            val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, spinnerArray)
             aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.setAdapter(aa)
         }
 
-        fun checkSinglePermission(activity: Activity, permission: String) : Boolean {
-            return ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+        fun checkSinglePermission(activity: Activity, permission: String): Boolean {
+            return ContextCompat.checkSelfPermission(
+                activity,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
         }
 
-
-        fun toastAction(context: Context,string: String){
-            Toast.makeText(context,string,Toast.LENGTH_LONG).show()
+        fun toastAction(context: Context, string: String) {
+            Toast.makeText(context, string, Toast.LENGTH_LONG).show()
         }
 
         fun isLocationEnabled(context: Context): Boolean {
@@ -58,8 +59,7 @@ class KrisheUtils {
             return LocationManagerCompat.isLocationEnabled(locationManager)
         }
 
-
-        fun oneDigToTwo(value: Int): String? {
+        fun oneDigToTwo(value: Int): String {
             var dd = ""
             dd = if (value < 10) {
                 "0$value"
@@ -70,12 +70,9 @@ class KrisheUtils {
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun DATETIME(string: String): String {
-            val dateFormat: SimpleDateFormat
-            dateFormat = if (string == "NOW") {
-                SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss"
-                )
+        fun dateTime(string: String): String {
+            val dateFormat = if (string == "NOW") {
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             } else {
                 SimpleDateFormat("yyyy-MM-dd")
             }
@@ -84,18 +81,41 @@ class KrisheUtils {
         }
 
         /* Global Alertdialog for application*/
-        fun alertDialogShow(context: Context, message: String, title: String, icon: Int) {
+        fun alertDialogShowOK(
+            context: Context,
+            message: String,
+            icon: Int,
+            clickListener: DialogInterface.OnClickListener
+        ) {
             val alertDialog = AlertDialog.Builder(context)
             alertDialog.setIcon(icon)
-            alertDialog.setTitle(title)
+            alertDialog.setTitle(context.resources.getString(com.krishe.govern.R.string.app_name))
             alertDialog.setMessage(message)
             alertDialog.setNegativeButton(
-                "OK"
-            ) { dialog, which -> dialog.dismiss() }
+                "OK", clickListener
+            )
             val alert = alertDialog.create()
 
             // show it
             alert.show()
+        }
+
+        /* Global Alertdialog for application*/
+        fun alertDialogShowYesNo(
+            context: Context,
+            msg: String,
+            clickListener: DialogInterface.OnClickListener
+        ) {
+            AlertDialog.Builder(context)
+                .setIcon(com.krishe.govern.R.mipmap.ic_launcher)
+                .setTitle(com.krishe.govern.R.string.app_name)
+                .setMessage(msg)
+                .setPositiveButton(
+                    context.resources.getString(com.krishe.govern.R.string.yes),
+                    clickListener
+                )
+                .setNegativeButton(context.resources.getString(com.krishe.govern.R.string.no), null)
+                .show()
         }
 
 
@@ -104,7 +124,7 @@ class KrisheUtils {
             myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
             val imgDirectory = File(
                 context?.getExternalFilesDir("KrishE-World").toString() + "/KrishE-World"
-                        //Environment.getExternalStorageDirectory()
+                //Environment.getExternalStorageDirectory()
 
             )
             // have the object build the directory structure, if needed.
@@ -118,7 +138,7 @@ class KrisheUtils {
                 val fo = FileOutputStream(f)
                 fo.write(bytes.toByteArray())
                 MediaScannerConnection.scanFile(
-                    context,arrayOf(f.path),arrayOf("image/jpeg"),null
+                    context, arrayOf(f.path), arrayOf("image/jpeg"), null
                 )
                 fo.close()
                 Log.d("TAG", "File Saved::--->" + f.absolutePath)
@@ -150,8 +170,8 @@ class KrisheUtils {
             if (BuildConfig.BUILD_TYPE.equals("debug")) {
                 val g = Gson()
                 Log.d("Request", call)
-                req!=null ?: Log.d("LogReq", g.toJson(req))
-                res!=null ?: Log.d("LogRes", g.toJson(res))
+                req != null ?: Log.d("LogReq", g.toJson(req))
+                res != null ?: Log.d("LogRes", g.toJson(res))
             }
         }
     }

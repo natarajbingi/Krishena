@@ -1,6 +1,4 @@
-package com.krishe.govern.utils
-
-import com.krishe.govern.views.newReport.NameImageModel
+package com.krishe.govern.views.newReport
 
 interface OnItemClickListener {
     fun onItemClick(item: NameImageModel, position: Int)

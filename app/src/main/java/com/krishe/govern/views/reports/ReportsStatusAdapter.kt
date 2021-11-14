@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ReportItemBinding
-import com.krishe.govern.utils.OnReportItemClickListener
 import com.krishe.govern.views.newReport.NameImageModel
 import com.krishe.govern.views.newReport.NewReportModelReq
 import java.text.DateFormat

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
@@ -16,7 +15,6 @@ import com.krishe.govern.R
 import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.home.CommunicationCallBack
-import com.krishe.govern.views.home.HomeViewModel
 
 class MainFragment : BaseFragment(){
     private lateinit var codeScanner: CodeScanner
@@ -40,8 +38,6 @@ class MainFragment : BaseFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         scannerView = view.findViewById<CodeScannerView>(R.id.scanner_view)
         activity = requireActivity()
-//        onViewAvailable (callBackArgs.nCallBack)
-//        callBack = arguments?.get("callBack") as CommunicationCallBack
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 

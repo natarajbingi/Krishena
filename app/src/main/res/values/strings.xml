@@ -13,11 +13,13 @@
     <string name="select_implement_from_list">Select implement from List</string>
     <string name="if_implement_is_not_available_please_refresh_list">* if implement is not available, please refresh List</string>
     <string name="or">OR</string>
-    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="scan_qr_code">Implement: Scan QR Code</string>
     <string name="report_type">Report Type</string>
     <string name="add_images">Add Images</string>
     <string name="please_enable_location_to_proceed">* please Enable location to proceed</string>
     <string name="no_internet">Internet is not available.</string>
+    <string name="select_implement">Select Implement</string>
+    <string name="scan_qr">Scan QR</string>
 
     <string-array name="reportsArray">
         <item>Select</item>

@@ -1,4 +1,4 @@
-package com.krishe.govern.imgAzure
+package com.krishe.govern.networks.imgAzure
 
 import android.net.Uri
 import android.os.Environment

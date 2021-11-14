@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.krishe.govern.R;
-
 public class ProgressBarHandler {
     private final ProgressBar mProgressBar;
 

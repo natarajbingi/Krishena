@@ -1,7 +1,6 @@
 package com.krishe.govern.views.newReport
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Handler
@@ -17,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ImgaeLayoutBinding
-import com.krishe.govern.imgAzure.ImageManager
-import com.krishe.govern.utils.OnItemClickListener
+import com.krishe.govern.networks.imgAzure.ImageManager
 import com.krishe.govern.views.reports.ReportsFragment
 import java.io.ByteArrayOutputStream
 import java.io.File

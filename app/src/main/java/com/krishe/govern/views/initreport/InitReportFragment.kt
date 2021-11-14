@@ -17,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.krishe.govern.MainActivity
 import com.krishe.govern.R
@@ -37,14 +36,15 @@ import org.json.JSONObject
 
 class InitReportFragment : BaseFragment(), CommunicationCallBack {
 
-    lateinit var binding: InitReportsFragmentBinding
-    private lateinit var viewModel: InitReportViewModel
     private lateinit var activity: Activity
-    var implementID = ""
     private lateinit var ctx: Context
-    var latitude = 0.0
-    var longitude = 0.0
-    lateinit var newReportModelReq : NewReportModelReq
+    private lateinit var binding: InitReportsFragmentBinding
+    private lateinit var viewModel: InitReportViewModel
+    private lateinit var newReportModelReq : NewReportModelReq
+    private var implementID = ""
+    private var latitude = 0.0
+    private var longitude = 0.0
+    private var scanningProgress = false
 
     companion object {
         var newReportModelReqData: MutableLiveData<NewReportModelReq> = MutableLiveData()
@@ -66,6 +66,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
 
         context?.registerReceiver(gpsReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
+//        binding.implementNameShow.text = ""
         // f0r QR c0de scanner result
         binding.scanQrCode.setOnClickListener {
             /*val string = "{\"id\": 483,\"implement_type\": \"Laser Leveller\",\"category\": \"Krish-e\", \"price_per_acre\": 480, \"price_per_day\": 3200,\"price_per_hour\": 400,\"implement_category\": \"Specialised Land Preparation\",\"implement_code\": \"LPLLLBRH001K\",\"dealership_name\": \"Vinayak Auto\",\"dealer_phone\": 9771494767 }"
@@ -74,20 +75,14 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
             val fragment = MainFragment()
             fragment.onViewAvailable(this)
             MainActivity.fragmentSetter.postValue(fragment)
+            scanningProgress = true
            /* val action = InitReportFragmentDirections.actionInitReportFragmentToMainFragment()
             it.findNavController().navigate(action)*/
         }
 
-        /*Log.d("error", "getExternalStorageDirectory "+Environment.getExternalStorageDirectory());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Log.d("error", "getStorageDirectory "+Environment.getStorageDirectory())
-        };
-        Log.d("error", "getExternalStorageState "+Environment.getExternalStorageState());
-        Log.d("error", "getExternalFilesDir "+ (getActivity()?.getExternalFilesDir("KrishE-World") ?:"nt avaibe" ));*/
-
-        binding.refreshImplementButton.setOnClickListener {
+        /*binding.refreshImplementButton.setOnClickListener {
             KrisheUtils.toastAction(activity,"will refresh soon with API")
-        }
+        }*/
 
         binding.addImageNxt.setOnClickListener {
             validate()
@@ -121,10 +116,10 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
 
         })
 
-        viewModel._data.observe(viewLifecycleOwner, Observer {
+        /*viewModel._data.observe(viewLifecycleOwner, Observer {
 
             Log.e("data", " "+it?.get(0)?.implement_code)
-        })
+        })*/
 
         return binding.root
     }
@@ -163,15 +158,16 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         intent.putExtra("from", "fragment")
 
         regContract.launch(intent)
-        //startActivity(intent)
     }
 
     val regContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
         if(result.resultCode == 1){
+            binding.implementNameShow.text = "Implement: "
             implementID = ""
             binding.reportTypeSpinner.setSelection(0)
         }
     }
+
     fun getLocationLatLong(){
         val gps = GetCurrentGPSLocation(activity)
 
@@ -213,7 +209,12 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         if (binding.locationSwitch.isChecked){
             getLocationLatLong()
         }
+        if(scanningProgress){
+            binding.implementNameShow.text = "Implement: ${newReportModelReq.implementName}"
+            scanningProgress = false
+        }
     }
+
     // f0r QR c0de scanner result
     override fun scannerToInit(msg: String ){
         Log.e("implementID", " $msg")
@@ -225,7 +226,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         newReportModelReq.ownerShip = msgJsonObj.optString("dealership_name")
         newReportModelReq.latitude = latitude.toString()
         newReportModelReq.longitude = longitude.toString()
-        KrisheUtils.toastAction(ctx ,newReportModelReq.implementName)
+        // KrisheUtils.toastAction(ctx ,newReportModelReq.implementName)
     }
 
     private fun checkLocationPermissionAPI29() {

@@ -40,7 +40,7 @@ class HomeViewModel(application: Application) : BaseViewModel(application), Init
     override fun onSuccessImplementList(res: ImplementsDataRes) {
         view.onPrHide()
         sessions.setUserObj(res, KrisheUtils.implementListSession)
-        sessions.setUserString(KrisheUtils.DATETIME("nope"), KrisheUtils.oldProcessingDate)
+        sessions.setUserString(KrisheUtils.dateTime("nope"), KrisheUtils.oldProcessingDate)
         setImplementList(res.data)
        // Log.e("TAG", "onSuccessImplementList: "+list)
     }

@@ -1,6 +1,5 @@
 package com.krishe.govern.views.newReport
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -19,7 +18,6 @@ import com.krishe.govern.R
 import com.krishe.govern.databinding.ActivityNewReportBinding
 import com.krishe.govern.utils.BaseActivity
 import com.krishe.govern.utils.KrisheUtils
-import com.krishe.govern.utils.OnItemClickListener
 import com.krishe.govern.views.initreport.InitReportFragment.Companion.newReportModelReqData
 import com.krishe.govern.views.reports.ReportsStatusAdapter.ReportsViewHolder.Companion.nameImageModelObj
 import kotlinx.android.synthetic.main.activity_new_report.*
@@ -200,7 +198,12 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
         // back button click
         binding.backButton.setOnClickListener {
-            onBackPressMethod()
+            if (binding.backButton.text == "Edit") {
+                binding.backButton.text = "Back"
+                currentStep = stepOne
+                setUpCurrentStepView()
+            } else
+                onBackPressMethod()
         }
 
         setUpCurrentStepView()
@@ -284,10 +287,12 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 override fun onImagePickerError(error: Throwable, source: MediaSource) {
                     //Some error handling
                     error.printStackTrace()
-                    KrisheUtils.alertDialogShow(
+                    KrisheUtils.alertDialogShowOK(
                         this@NewReportActivity,
                         "There is a problem landing image, please try again",
-                        resources.getString(R.string.app_name), R.mipmap.ic_launcher
+                        R.mipmap.ic_launcher,{ dialog, which ->
+                            dialog.dismiss()
+                        }
                     )
                 }
 
@@ -315,20 +320,14 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
     private fun callAlertDialog(imgPath: String, direct: Boolean) {
         if (imgPath.isNotEmpty()) {
-            AlertDialog.Builder(this)
-                .setIcon(R.mipmap.ic_launcher)
-                .setTitle(R.string.app_name)
-                .setMessage("Are you sure want to Re-Take the IMAGE ?")
-                .setPositiveButton(getString(R.string.yes),
-                    DialogInterface.OnClickListener { dialog, which ->
-                        // if (direct) {
-                        selectImage(this)
-                        // } else {
-                        //     askNameForImgAlertBox()
-                        // }
-                    })
-                .setNegativeButton(getString(R.string.no), null)
-                .show()
+            KrisheUtils.alertDialogShowYesNo(this,"Are you sure want to Re-Take the IMAGE ?",
+                { dialog, which ->
+                    // if (direct) {
+                    selectImage(this)
+                     /*} else {
+                         askNameForImgAlertBox()
+                     }*/
+                } )
         } else {
             // if (direct)
             selectImage(this)
@@ -338,18 +337,10 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     }
 
     private fun confirmAlertDialog(msg: String) {
-            AlertDialog.Builder(this)
-                .setIcon(R.mipmap.ic_launcher)
-                .setTitle(R.string.app_name)
-                .setMessage(msg)
-                .setPositiveButton(getString(R.string.yes),
-                    DialogInterface.OnClickListener { dialog, which ->
-
-                        viewModel.imageUploadSet(this)
-                    })
-                .setNegativeButton(getString(R.string.no), null)
-                .show()
-
+        KrisheUtils.alertDialogShowYesNo(this,msg,
+        { dialog, which ->
+            viewModel.imageUploadSet(this)
+        } )
     }
 
     private fun askNameForImgAlertBox() {
@@ -423,38 +414,32 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
     // Remove Image if with in 5 items else remove item.
     override fun onItemRemove(item: NameImageModel, position: Int) {
-        AlertDialog.Builder(this)
-            .setIcon(R.mipmap.ic_launcher)
-            .setTitle(R.string.app_name)
-            .setMessage("Are you sure want to Remove the IMAGE?")
-            .setPositiveButton(getString(R.string.yes),
-                DialogInterface.OnClickListener { dialog, which ->
+        KrisheUtils.alertDialogShowYesNo(this,"Are you sure want to Remove the IMAGE?",
+            { dialog, which ->
 
-                    if (position in 0..4) {
-                        item.imgPath = ""
-                        viewModel.defaultData[position] = item
-                    } else {
-                        viewModel.defaultData.removeAt(position)
-                    }
-                    adapter.submitList(viewModel.defaultData)
-                    adapter.notifyDataSetChanged()
-                    ifShowStepOneImagesLayout()
+                if (position in 0..4) {
+                    item.imgPath = ""
+                    viewModel.defaultData[position] = item
+                } else {
+                    viewModel.defaultData.removeAt(position)
+                }
+                adapter.submitList(viewModel.defaultData)
+                adapter.notifyDataSetChanged()
+                ifShowStepOneImagesLayout()
 
-                })
-            .setNegativeButton(getString(R.string.no), null)
-            .show()
-
+            } )
     }
 
     private fun onBackPressMethod() {
         when (currentStep) {
             stepThree -> {
                 if (binding.backButton.text == "Edit") {
-                    currentStep = stepOne
-                    binding.backButton.text = "Back"
-                } else
+                    setResult(0)
+                    super.onBackPressed()
+                } else {
                     currentStep = stepTwo
-                setUpCurrentStepView()
+                    setUpCurrentStepView()
+                }
             }
             stepTwo -> {
                 currentStep = stepOne
@@ -494,26 +479,14 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     override fun onSuccess(msg: String) {
         hidePbar()
         runOnUiThread {
-            alertDialogShow(msg, resources.getString(R.string.app_name), R.mipmap.ic_launcher)
+            KrisheUtils.alertDialogShowOK(this,msg,R.mipmap.ic_launcher,
+                { dialog, which ->
+                    dialog.dismiss()
+                    setResult(1)
+                    finish()
+                } )
         }
     }
 
-    private fun alertDialogShow(message: String, title: String, icon: Int) {
-        val alertDialog = android.app.AlertDialog.Builder(this)
-        alertDialog.setIcon(icon)
-        alertDialog.setTitle(title)
-        alertDialog.setMessage(message)
-        alertDialog.setNegativeButton(
-            "OK"
-        ) { dialog, which ->
-            dialog.dismiss()
-            setResult(1)
-            finish()
-        }
-        val alert = alertDialog.create()
-
-        // show it
-        alert.show()
-    }
 
 }

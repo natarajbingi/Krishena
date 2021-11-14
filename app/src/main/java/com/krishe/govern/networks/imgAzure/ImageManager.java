@@ -15,7 +15,7 @@
 *----------------------------------------------------------------------------------
 **/
 
-package com.krishe.govern.imgAzure;
+package com.krishe.govern.networks.imgAzure;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.CloudBlobClient;

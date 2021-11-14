@@ -19,7 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
-import com.krishe.govern.imgAzure.ImageManager
+import com.krishe.govern.networks.imgAzure.ImageManager
 import com.krishe.govern.networks.NetWorkCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

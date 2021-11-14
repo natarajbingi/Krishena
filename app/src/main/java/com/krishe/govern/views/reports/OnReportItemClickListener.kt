@@ -1,6 +1,5 @@
-package com.krishe.govern.utils
+package com.krishe.govern.views.reports
 
-import com.krishe.govern.views.newReport.NameImageModel
 import com.krishe.govern.views.newReport.NewReportModelReq
 
 interface OnReportItemClickListener {

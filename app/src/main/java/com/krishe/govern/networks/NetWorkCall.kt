@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 class NetWorkCall {
     companion object {
-        private val cacheSize = 5 * 1024 * 1024 // 5 MB size
+        // private val cacheSize = 5 * 1024 * 1024 // 5 MB size
 
         private const val BASE_URL = "https://krishe-rental.azurewebsites.net"
         private const val BASE_URL_ = "http://krisheapp.pythonanywhere.com"
@@ -46,7 +46,7 @@ class NetWorkCall {
         private const val REMOVE_IMPLEMENT = "/remove_implement"
         private const val DELETE_IMPLEMENT = "/delete_implement"
 
-        fun NetworkingSetup(context: Context) {
+        fun networkingSetup(context: Context) {
 
             // Adding an Network Interceptor for Debugging purpose :
             val okHttpClient: OkHttpClient = OkHttpClient().newBuilder()
@@ -94,15 +94,6 @@ class NetWorkCall {
                 .build()
         }
 
-        private fun getANReqPython(url: String): ANRequest<out ANRequest<*>> {
-            return AndroidNetworking.get("$BASE_URL_$url")
-                .addHeaders("Content-Type", "application/json")
-                //.addHeaders(API_KEY, KEY)
-                .addHeaders("Accept", "application/json")
-                .setPriority(Priority.MEDIUM)
-                .build()
-        }
-
         private fun postANReqPythonJson(url: String, jsonObject: JSONObject): ANRequest<out ANRequest<*>> {
             Log.e("TAG", "postANReqPythonJson: $BASE_URL_$url", )
             return AndroidNetworking.post("$BASE_URL_$url")
@@ -125,12 +116,6 @@ class NetWorkCall {
                                 val dataJSONArray: JSONArray = response.getJSONArray("data")
                                 for (i in 0 until (dataJSONArray.length())) {
                                     val dataObj = dataJSONArray.getJSONObject(i)
-                                    /* //val dealershipDetails = dataObj.getJSONObject("dealership_details")
-                                                 //val dealership_name = dataObj.optString("dealership_name")
-                                                 val dealership = DealershipDetails(
-                                                     dealership_name,
-                                                     dealershipDetails.optString(dealership_name)
-                                                 )*/
                                     data.add(
                                         Data(
                                             dataObj.optInt("id"),
@@ -246,6 +231,7 @@ class NetWorkCall {
             }
         }
 
+        // update deletion for user but keep in server DataBase
         suspend fun removeImplement(v: ReportsICallBack, removeParam: JSONObject) {
             Log.e("TAG", "remove newReportModelReq: $removeParam")
             return withContext(Dispatchers.IO) {
@@ -266,6 +252,7 @@ class NetWorkCall {
             }
         }
 
+        // delete from server DataBase
         suspend fun deleteImplement(v: NewReportCallBack, deleteParam: JSONObject) {
             Log.e("TAG", "delete newReportModelReq: $deleteParam")
             return withContext(Dispatchers.IO) {

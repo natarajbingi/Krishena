@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import com.krishe.govern.MainActivity
 import com.krishe.govern.R
 import com.krishe.govern.databinding.HomeFragmentBinding
@@ -91,7 +89,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
     }
 
     override fun onSuccessImplementList(list: ImplementsDataRes) {
-        sessions.setUserString(KrisheUtils.DATETIME("nope"), KrisheUtils.oldProcessingDate)
+        sessions.setUserString(KrisheUtils.dateTime("nope"), KrisheUtils.oldProcessingDate)
 
     }
 
@@ -99,7 +97,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
         sessions.setUserString("10",KrisheUtils.userID)
 
         val checkDate: String? = sessions.getUserString( KrisheUtils.oldProcessingDate)
-        if (checkDate == null || !KrisheUtils.DATETIME("nope").equals(checkDate)) {
+        if (checkDate == null || !KrisheUtils.dateTime("nope").equals(checkDate)) {
             if (KrisheUtils.isOnline(ctx)) {
                 viewModel.onGetImplementList()
             } else {
