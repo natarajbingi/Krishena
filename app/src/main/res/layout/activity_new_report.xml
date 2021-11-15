@@ -103,7 +103,7 @@
                     android:id="@+id/stepOneImagesLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/imgae_layout" />
 
@@ -146,116 +146,271 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginTop="15dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/text1"
+                    <LinearLayout
+                        android:id="@+id/monthlyMainRepoLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:padding="10dp"
-                        android:visibility="gone"
-                        android:text="Please Select Current \nImplement State"
-                        android:textColor="@color/headerText"
-                        android:textSize="24sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/header_title" />
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                    <RadioGroup
-                        android:id="@+id/currentImplementStatusGrp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp">
-
-                        <!--<LinearLayout
+                        <TextView
+                            android:id="@+id/text1"
                             android:layout_width="match_parent"
-                            android:orientation="horizontal"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:padding="10dp"
+                            android:text="How do you define Implement Condition? *"
+                            android:textColor="@color/headerText"
+                            android:textSize="24sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/header_title" />
 
-                            <RadioButton
-                                android:id="@+id/radioButton"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:text="Functional" />
+                        <RadioGroup
+                            android:id="@+id/currentImplementStatusGrp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
 
                             <RadioButton
                                 android:id="@+id/radioButton1"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Non-Functional" />
+                                android:text="Implement is Perfectly OKAY" />
 
-                        </LinearLayout>-->
-                        <!--<LinearLayout
-                           android:layout_width="match_parent"
-                           android:orientation="horizontal"
-                           android:layout_height="wrap_content">-->
+                            <RadioButton
+                                android:id="@+id/radioButton2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Implement is Okay BUT schedule service is due" />
 
-                           <RadioButton
-                               android:id="@+id/radioButton2"
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:text="Servicing Required" />
+                            <RadioButton
+                                android:id="@+id/radioButton3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Implement is Okay BUT requires minor repairs" />
 
-                           <RadioButton
-                               android:id="@+id/radioButton3"
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:text="Major Damage" />
+                            <RadioButton
+                                android:id="@+id/radioButton4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Implement is NOT Okay – Breakdown – Major repairs &amp; parts are needed" />
 
-                    <!--</LinearLayout>-->
-             <!--<LinearLayout
-                 android:layout_width="match_parent"
-                 android:orientation="horizontal"
-                 android:layout_height="wrap_content">-->
+                            <RadioButton
+                                android:id="@+id/radioButton5"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Implement is NOT Okay – Can be scrapped" />
 
-                           <RadioButton
-                               android:id="@+id/radioButton4"
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:text="Replacement required" />
+                            <RadioButton
+                                android:id="@+id/radioButton6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Other" />
 
-                           <RadioButton
-                               android:id="@+id/radioButton5"
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:text="All OK" />
-                        <!-- </LinearLayout>-->
-                   </RadioGroup>
+                        </RadioGroup>
 
-                   <TextView
-                       android:id="@+id/text2"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:layout_marginStart="10dp"
-                       android:padding="10dp"
-                       android:visibility="gone"
-                       android:text="Additional Report \nComments"
-                       android:textColor="@color/headerText"
-                       android:textSize="24sp"
-                       app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toBottomOf="@+id/header_title" />
+                        <TextView
+                            android:id="@+id/text2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:padding="10dp"
+                            android:visibility="gone"
+                            android:text="Additional Report \nComments"
+                            android:textColor="@color/headerText"
+                            android:textSize="24sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/header_title" />
 
-                   <com.google.android.material.textfield.TextInputEditText
-                       android:id="@+id/reportCommentsEditext"
-                       android:layout_width="match_parent"
-                       android:layout_height="155dp"
-                       android:layout_margin="10dp"
-                       android:background="@drawable/custom_background"
-                       android:gravity="start"
-                       android:hint="Other Report Comments"
-                       android:padding="10dp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/reportCommentsEditext"
+                            android:layout_width="match_parent"
+                            android:layout_height="155dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/custom_background"
+                            android:gravity="start"
+                            android:hint="Other Report Comments"
+                            android:padding="10dp" />
 
-                   <ImageView
-                       android:id="@+id/testImg"
-                       android:layout_width="175dp"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center_horizontal"
-                       android:src="@drawable/qrimg"
-                       android:visibility="gone" />
-               </LinearLayout>
+                        <ImageView
+                            android:id="@+id/testImg"
+                            android:layout_width="175dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/qrimg"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/preSeasonalRepoLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/textpreSeasonal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:padding="10dp"
+                            android:text="Is Implement's Schedule Service done? *"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+                        <RadioGroup
+                            android:id="@+id/preSeasonalServiceGrp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+
+                            <RadioButton
+                                android:id="@+id/radiopreSeasonalServiceButton1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/radiopreSeasonalServiceButton2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="No" />
+
+                            <RadioButton
+                                android:id="@+id/radiopreSeasonalServiceButton3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Other" />
+
+                        </RadioGroup>
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/preSeasonalServiceComment"
+                            android:layout_width="match_parent"
+                            android:layout_height="75dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/custom_background"
+                            android:gravity="start"
+                            android:hint="Other Comments"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:id="@+id/textpreReadiness"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:padding="10dp"
+                            android:text="Is Implement's 'Pre-Seasonal readiness' done for upcoming season? *"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+                        <RadioGroup
+                            android:id="@+id/preSeasonalReadinessGrp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+
+                            <RadioButton
+                                android:id="@+id/radiopreSeasonalReadinessButton1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Yes" />
+
+                            <RadioButton
+                                android:id="@+id/radiopreSeasonalReadinessButton2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="No" />
+
+                            <RadioButton
+                                android:id="@+id/radiopreSeasonalReadinessButton3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Other" />
+
+                        </RadioGroup>
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/preSeasonalReadinessComment"
+                            android:layout_width="match_parent"
+                            android:layout_height="75dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/custom_background"
+                            android:gravity="start"
+                            android:hint="Other Comments"
+                            android:padding="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/BreakdownRepoLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textBreakdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:padding="10dp"
+                            android:text="Please select the nature of Breakdown *"
+                            android:textColor="@color/headerText"
+                            android:textSize="24sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+                        <RadioGroup
+                            android:id="@+id/BreakdownGrp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+
+                            <RadioButton
+                                android:id="@+id/radioBreakdownButton1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Minor – Can be resolved in field by local technicians in 0 to 1 day" />
+
+                            <RadioButton
+                                android:id="@+id/radioBreakdownButton2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Moderate – Can be resolved by the dealer service team in 0 to 2 days" />
+
+                            <RadioButton
+                                android:id="@+id/radioBreakdownButton3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Major – Immediate intervention of M&amp;M team is needed" />
+
+                            <RadioButton
+                                android:id="@+id/radioBreakdownButton4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Other" />
+
+                        </RadioGroup>
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/reportBreakdownEditext"
+                            android:layout_width="match_parent"
+                            android:layout_height="155dp"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/custom_background"
+                            android:gravity="start"
+                            android:hint="Other Comments"
+                            android:padding="10dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
 
                <LinearLayout
                    android:id="@+id/decisionButtonsLayout"

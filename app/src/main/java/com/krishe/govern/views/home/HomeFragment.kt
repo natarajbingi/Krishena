@@ -109,16 +109,4 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
         }
     }
 
-    /*
-    *  val name = "Jenny Jones"
-            val age = 25
-            val bundle = Bundle()
-            bundle.putString("name",name)
-            bundle.putInt("age",age)
-            val fragment = FirstFragment()
-            fragment.arguments = bundle
-
-            // Call the extension function for fragment transaction
-            context.replaceFragment(fragment)
-    * */
 }

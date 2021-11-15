@@ -15,7 +15,6 @@ class HomeViewModel(application: Application) : BaseViewModel(application), Init
 
     lateinit var view: InitIReportCallBack
     lateinit var sessions: Sessions
-    // TODO: Implement the ViewModel
 
     override fun onCleared() {
         super.onCleared()

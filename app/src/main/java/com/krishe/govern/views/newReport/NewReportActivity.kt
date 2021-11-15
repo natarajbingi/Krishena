@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
@@ -33,6 +34,8 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     lateinit var binding: ActivityNewReportBinding
     private lateinit var adapter: NewReportAdapter
     private lateinit var newReportModelReq: NewReportModelReq
+    private lateinit var currentLinearLayout: LinearLayout
+    private var currentLinearLayoutVal= 0
 
     var from: String = ""
     var latitude: Double = 0.0
@@ -68,6 +71,22 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
     private fun initSetUp() {
 
+        currentLinearLayout = when (newReportModelReq.reportTypeName) {
+            "Monthly maintenance report" -> {
+                currentLinearLayoutVal = 1
+                binding.monthlyMainRepoLayout
+            }
+            "Pre-season Checklist" -> {
+                currentLinearLayoutVal = 2
+                binding.preSeasonalRepoLayout
+            }
+            "Breakdown report" -> {
+                currentLinearLayoutVal = 3
+                binding.BreakdownRepoLayout
+            }
+            else -> binding.monthlyMainRepoLayout
+        }
+
         if (from == "fragment") {
             currentStep = stepOne
             binding.backButton.text = "Back"
@@ -79,6 +98,8 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 viewModel.defaultData.clear()
                 viewModel.defaultData.addAll(nameImageModelObj(newReportModelReq.nameImageModel))
             }
+
+            setUpSecSet()
         }
 
         adapter = NewReportAdapter(this)
@@ -89,15 +110,6 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
         binding.implementId.text = newReportModelReq.implementID
         binding.implementType.text = newReportModelReq.reportTypeName
         binding.ownerShip.text = newReportModelReq.ownerShip
-
-        binding.reportCommentsEditext.setText(newReportModelReq.reportComment)
-
-        when (newReportModelReq.currentImplementStatus) {
-            "Servicing Required" -> binding.radioButton2.isChecked = true
-            "Major Damage" -> binding.radioButton3.isChecked = true
-            "Replacement required" -> binding.radioButton4.isChecked = true
-            "All OK" -> binding.radioButton5.isChecked = true
-        }
 
         binding.forwardDecisionButton.setOnClickListener {
 
@@ -120,18 +132,8 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
             } else
             // todo stepTwo
                 if (currentStep == stepTwo) {
-
-                    val radioCheck = binding.currentImplementStatusGrp.checkedRadioButtonId
-                    if (radioCheck == -1 || binding.reportCommentsEditext.text.toString()
-                            .isEmpty()
-                    ) {
-                        KrisheUtils.toastAction(this, "Implement State & Comments are Mandatory")
-                    } else {
+                    if (!validateSet()) {
                         currentStep = stepThree
-                        val rb = findViewById<View>(radioCheck) as RadioButton
-                        newReportModelReq.currentImplementStatus = rb.text.toString()
-                        newReportModelReq.reportComment =
-                            binding.reportCommentsEditext.text.toString()
                         setUpCurrentStepView()
                     }
 
@@ -209,24 +211,119 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
         setUpCurrentStepView()
     }
 
+    private fun setUpSecSet() {
+        when (currentLinearLayoutVal) {
+            1 -> {
+                binding.reportCommentsEditext.setText(newReportModelReq.reportComment)
+                when (newReportModelReq.currentImplementStatus) {
+                    "Implement is Perfectly OKAY" -> binding.radioButton1.isChecked = true
+                    "Implement is Okay BUT schedule service is due" -> binding.radioButton2.isChecked = true
+                    "Implement is Okay BUT requires minor repairs" -> binding.radioButton3.isChecked = true
+                    "Implement is NOT Okay – Breakdown – Major repairs & parts are needed" -> binding.radioButton4.isChecked = true
+                    "Implement is NOT Okay – Can be scrapped" -> binding.radioButton5.isChecked = true
+                    "Other" -> binding.radioButton6.isChecked = true
+                }
+            }
+            2 -> {
+                val strRB = newReportModelReq.currentImplementStatus.split("_")
+                val strRBCmt = newReportModelReq.reportComment.split("_")
+                binding.preSeasonalServiceComment.setText(strRBCmt[0])
+                binding.preSeasonalReadinessComment.setText(strRBCmt[1])
+                when (strRB[0]) {
+                    "Yes" -> binding.radiopreSeasonalServiceButton1.isChecked = true
+                    "No" -> binding.radiopreSeasonalServiceButton2.isChecked = true
+                    "Other" -> binding.radiopreSeasonalServiceButton3.isChecked = true
+                }
+                when (strRB[1]) {
+                    "Yes" -> binding.radiopreSeasonalReadinessButton1.isChecked = true
+                    "No" -> binding.radiopreSeasonalReadinessButton2.isChecked = true
+                    "Other" -> binding.radiopreSeasonalReadinessButton3.isChecked = true
+                }
+            }
+            3 -> {
+                binding.reportBreakdownEditext.setText(newReportModelReq.reportComment)
+                when (newReportModelReq.currentImplementStatus) {
+                    "Minor – Can be resolved in field by local technicians in 0 to 1 day" -> binding.radioBreakdownButton1.isChecked = true
+                    "Moderate – Can be resolved by the dealer service team in 0 to 2 days" -> binding.radioBreakdownButton2.isChecked = true
+                    "Major – Immediate intervention of M&M team is needed" -> binding.radioBreakdownButton3.isChecked = true
+                    "Other" -> binding.radioBreakdownButton4.isChecked = true
+                }
+            }
+        }
+    }
+
+    private fun validateSet(): Boolean {
+         when (currentLinearLayoutVal) {
+            1 -> {
+                val radioCheck = binding.currentImplementStatusGrp.checkedRadioButtonId
+                return if (radioCheck == -1 || binding.reportCommentsEditext.text.toString().isEmpty()) {
+                    KrisheUtils.toastAction(this, "Implement State & Comments are Mandatory")
+                    true
+                } else {
+                    val rb = findViewById<View>(radioCheck) as RadioButton
+                    newReportModelReq.currentImplementStatus = rb.text.toString()
+                    newReportModelReq.reportComment = binding.reportCommentsEditext.text.toString()
+                    false
+                }
+            }
+            2 -> {
+                val radioCheck1 = binding.preSeasonalServiceGrp.checkedRadioButtonId
+                val radioCheck2 = binding.preSeasonalReadinessGrp.checkedRadioButtonId
+                return if (radioCheck1 == -1 || radioCheck2 == -1
+                        || binding.preSeasonalServiceComment.text.toString().isEmpty()
+                        || binding.preSeasonalReadinessComment.text.toString().isEmpty()){
+                    KrisheUtils.toastAction(this, "Schedule Service & pre seasonal readiness & Comments are Mandatory")
+                    true
+                } else {
+                    val rb = findViewById<View>(radioCheck1) as RadioButton
+                    val rb2 = findViewById<View>(radioCheck2) as RadioButton
+                    val strRdBtn = rb.text.toString() +"_"+ rb2.text.toString()
+                    val strRdCmt = binding.preSeasonalServiceComment.text.toString() +"_"+ binding.preSeasonalReadinessComment.text.toString()
+                    newReportModelReq.currentImplementStatus = strRdBtn
+                    newReportModelReq.reportComment = strRdCmt
+                    false
+                }
+
+            }
+            3 -> {
+                val radioCheck = binding.BreakdownGrp.checkedRadioButtonId
+                return if ( radioCheck == -1 || binding.reportBreakdownEditext.text.toString().isEmpty()){
+                    KrisheUtils.toastAction(this, "Nature of Breakdown & Comments are Mandatory")
+                    true
+                } else {
+                    val rb = findViewById<View>(radioCheck) as RadioButton
+                    newReportModelReq.currentImplementStatus = rb.text.toString()
+                    newReportModelReq.reportComment = binding.reportBreakdownEditext.text.toString()
+                    false
+                }
+            }
+            else -> return false
+        }
+
+
+    }
+
     private fun setUpCurrentStepView() {
         when (currentStep) {
             stepOne -> {
                 binding.stepOneImagesLayout.visibility = View.VISIBLE
                 binding.ifShowStepOneImagesLayout.visibility = View.VISIBLE
-                binding.stepTwoImagesLayout.visibility = View.GONE
                 binding.forwardDecisionButton.text = "Add Details"
+                binding.stepTwoImagesLayout.visibility = View.GONE
+                currentLinearLayout.visibility = View.GONE
             }
             stepTwo -> {
                 binding.stepOneImagesLayout.visibility = View.GONE
                 binding.ifShowStepOneImagesLayout.visibility = View.GONE
-                binding.stepTwoImagesLayout.visibility = View.VISIBLE
                 binding.forwardDecisionButton.text = "Preview Report"
+                binding.stepTwoImagesLayout.visibility = View.VISIBLE
+                currentLinearLayout.visibility = View.VISIBLE
             }
             stepThree -> {
                 binding.stepOneImagesLayout.visibility = View.VISIBLE
-                binding.stepTwoImagesLayout.visibility = View.VISIBLE
                 binding.forwardDecisionButton.text = "Submit Report"
+                binding.stepTwoImagesLayout.visibility = View.VISIBLE
+                currentLinearLayout.visibility = View.VISIBLE
 
             }
         }
@@ -242,8 +339,20 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
         for (i in 0 until binding.currentImplementStatusGrp.childCount) {
             (binding.currentImplementStatusGrp.getChildAt(i) as RadioButton).isEnabled = isEnabled
         }
+        for (i in 0 until binding.preSeasonalServiceGrp.childCount) {
+            (binding.preSeasonalServiceGrp.getChildAt(i) as RadioButton).isEnabled = isEnabled
+        }
+        for (i in 0 until binding.preSeasonalReadinessGrp.childCount) {
+            (binding.preSeasonalReadinessGrp.getChildAt(i) as RadioButton).isEnabled = isEnabled
+        }
+        for (i in 0 until binding.BreakdownGrp.childCount) {
+            (binding.BreakdownGrp.getChildAt(i) as RadioButton).isEnabled = isEnabled
+        }
         // binding.currentImplementStatusGrp.isEnabled = isEnabled
         binding.reportCommentsEditext.isEnabled = isEnabled
+        binding.preSeasonalServiceComment.isEnabled = isEnabled
+        binding.preSeasonalReadinessComment.isEnabled = isEnabled
+        binding.reportBreakdownEditext.isEnabled = isEnabled
         adapter.submitList(viewModel.defaultData)
 
         newReportModelReqData.postValue(newReportModelReq)
@@ -273,14 +382,6 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                     } else {
                         askNameForImgAlertBox()
                     }
-                    /*uploadFile(
-                        photos[0].getFile(),
-                        Constants.CreateFileNameWithWith_Height(500, 600, selectedType))
-                     Glide.with(this@NewReportActivity)
-                        .load(photos[0].file)
-                        //.centerCrop()
-                        //.placeholder(R.drawable.loading_spinner)
-                        .into(binding.testImg)*/;
 
                 }
 

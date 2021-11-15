@@ -1,7 +1,6 @@
 package com.krishe.govern.views.reports
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.krishe.govern.R
@@ -52,11 +50,12 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
         super.onAttach(context)
     }
 
-    val regContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
-        if(result.resultCode == 1){
-            viewModel.getReportsCall(paramJson)
+    val regContract =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == 1) {
+                viewModel.getReportsCall(paramJson)
+            }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -111,8 +110,8 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
             paramJson = JSONObject()
             paramJson.put(KrisheUtils.userID, sessions.getUserString(KrisheUtils.userID))
 
-            val fromDate = binding.dateFromFilter.text.toString()
-            val toDate = binding.dateToFilter.text.toString()
+            val fromDate = binding.dateFromFilter.text.toString().replace("From: ", "")
+            val toDate = binding.dateToFilter.text.toString().replace("To: ", "")
             val reportTypeName = binding.reportsSpinner.selectedItem.toString()
             if (fromDate.isNotEmpty()) {
                 paramJson.put("fromDate", fromDate)
@@ -162,16 +161,10 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
     }
 
     override fun onRemoveSuccess(msg: String) {
-        AlertDialog.Builder(ctx)
-            .setIcon(R.mipmap.ic_launcher)
-            .setTitle(R.string.app_name)
-            .setMessage(msg)
-            .setNegativeButton(getString(R.string.ok),
-                DialogInterface.OnClickListener { dialog, which ->
-                    if (msg != "no record found")
-                        viewModel.getReportsCall(paramJson)
-                })
-            .show()
+        KrisheUtils.alertDialogShowOK(ctx, msg, R.mipmap.ic_launcher, { dialog, which ->
+            if (msg != "no record found")
+                viewModel.getReportsCall(paramJson)
+        })
     }
 
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
@@ -181,18 +174,17 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
 
         when (imgDate) {
             0 -> {
-                binding.dateFromFilter.setText(date)
+                binding.dateFromFilter.text = "From: $date"
             }
             1 -> {
-                binding.dateToFilter.setText(date)
+                binding.dateToFilter.text = "To: $date"
             }
         }
 
     }
 
     override fun onItemClick(item: NewReportModelReq, position: Int) {
-        context?.let { KrisheUtils.toastAction(it, "Go View page") }
-
+        //KrisheUtils.toastAction(ctx, "Go View page")
 
         val intent = Intent(context, NewReportActivity::class.java)
         intent.putExtra("dateModel", item)
@@ -202,7 +194,7 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
     }
 
     override fun onItemLongClick(item: NewReportModelReq, position: Int) {
-        KrisheUtils.toastAction(ctx, "want to delete?")
+        //KrisheUtils.toastAction(ctx, "want to delete?")
         val jParam = JSONObject()
         jParam.put("id", item.id)
         jParam.put("userID", sessions.getUserString(KrisheUtils.userID))
@@ -210,17 +202,10 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
     }
 
     private fun confirmDeleteDialog(msg: String, jParam: JSONObject) {
-        AlertDialog.Builder(ctx)
-            .setIcon(R.mipmap.ic_launcher)
-            .setTitle(R.string.app_name)
-            .setMessage(msg)
-            .setPositiveButton(getString(R.string.yes),
-                DialogInterface.OnClickListener { dialog, which ->
 
-                    viewModel.deleteReportsCall(jParam)
-                })
-            .setNegativeButton(getString(R.string.no), null)
-            .show()
-
+        KrisheUtils.alertDialogShowYesNo(
+            ctx,
+            msg,
+            { dialog, which -> viewModel.deleteReportsCall(jParam) })
     }
 }

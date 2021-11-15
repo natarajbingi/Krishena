@@ -13,6 +13,7 @@
     <color name="radioPressed">#72828F</color>
     <color name="headerText">#505E69</color>
 
+    <color name="borderbg">#f2f2f2</color>
     <color name="border">#E2E7EB</color>
     <color name="SuccessButton">#E8833A</color>
     <color name="ScannerButton">#4D94FE</color>

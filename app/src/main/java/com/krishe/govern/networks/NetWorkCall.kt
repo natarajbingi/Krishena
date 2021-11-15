@@ -25,7 +25,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.json.JSONArray
 import org.json.JSONObject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
@@ -60,7 +59,7 @@ class NetWorkCall {
 
         private fun networkInterceptor(): Interceptor {
             return Interceptor { chain ->
-                Timber.d("network interceptor: called.")
+                Log.e("TAG", "network interceptor: called.")
                 val response = chain.proceed(chain.request())
                 val cacheControl: CacheControl = CacheControl.Builder()
                     .maxAge(5, TimeUnit.SECONDS)
@@ -77,7 +76,7 @@ class NetWorkCall {
             val httpLoggingInterceptor =
                 HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
                     override fun log(message: String) {
-                        Timber.d("log: http log: $message")
+                        Log.e("TAG", "http log: $message")
                     }
                 })
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)

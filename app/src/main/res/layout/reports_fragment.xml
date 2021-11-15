@@ -35,7 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:background="@color/borderbg"
+            android:layout_marginStart="10dp"
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -43,19 +45,16 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/date_from_filter"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:hint="From YYYY-MM-DD"
-                        android:inputType="text" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="From: YYYY-MM-DD"
+                    android:layout_height="35dp"
+                    android:id="@+id/date_from_filter"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:layout_weight="0.8"/>
 
                 <ImageView
                     android:id="@+id/img_date_click_from"
@@ -68,24 +67,19 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8">
-
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/date_to_filter"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:hint="To YYYY-MM-DD"
-                        android:inputType="text" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="To: YYYY-MM-DD"
+                    android:layout_height="35dp"
+                    android:id="@+id/date_to_filter"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:layout_weight="0.8"/>
 
                 <ImageView
                     android:id="@+id/img_date_click_to"
@@ -98,9 +92,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="45dp"
             android:layout_marginBottom="5dp"
+            android:background="@color/borderbg"
             android:layout_marginStart="10dp"
+            android:padding="5dp"
             android:layout_marginEnd="10dp"
             android:orientation="horizontal">
 
@@ -128,9 +124,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/reportsRecycleView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/report_item" />

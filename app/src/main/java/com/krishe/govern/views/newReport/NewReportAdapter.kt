@@ -23,11 +23,6 @@ import java.io.File
 
 class NewReportAdapter(val mListener: OnItemClickListener) :
     ListAdapter<NameImageModel, NewReportAdapter.NewReportViewHolder>(NewReportDiffCallback()) {
-    /*var data = listOf<NameImageModel>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewReportViewHolder {
         val binding = ImgaeLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -36,31 +36,31 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
     var defaultData = mutableListOf(
         NameImageModel(
             0,
-            "",
+            "yisbzmuuxu",
             "Top View",
             true
         ),
         NameImageModel(
             1,
-            "",
+            "pprxfcqalr",
             "Front View",
             true
         ),
         NameImageModel(
             2,
-            "",
+            "jjyvkcxkmw",
             "Left View",
             true
         ),
         NameImageModel(
             3,
-            "",
+            "tutxucllfq",
             "Right View",
             true
         ),
         NameImageModel(
             4,
-            "",
+            "jtothdwgoj",
             "Back View",
             true
         )
