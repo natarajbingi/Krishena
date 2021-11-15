@@ -16,6 +16,7 @@ import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.initreport.InitReportFragment
 import com.krishe.govern.views.reports.ReportsFragment
+import org.json.JSONObject
 
 
 class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
@@ -23,6 +24,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
     lateinit var binding: HomeFragmentBinding
     private lateinit var viewModel: HomeViewModel
     private lateinit var ctx: Context
+    private var jsonObject: JSONObject = JSONObject()
     companion object {
         fun newInstance() = HomeFragment()
     }
@@ -40,6 +42,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
         viewModel.onViewAvailable(this, sessions)
 
         checkListSetUp()
+        checkStatisticYMtSetUp()
 
         binding.reportLayout.setOnClickListener(this)
         binding.newQrCodeLayout.setOnClickListener(this)
@@ -47,14 +50,34 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
         binding.statsGroup.setOnCheckedChangeListener(object : RadioGroup.OnCheckedChangeListener{
             override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
                 when (checkedId){
-                    R.id.statMontly -> context?.let { KrisheUtils.toastAction(it,"statMontly") }
-                    R.id.statFY -> context?.let { KrisheUtils.toastAction(it,"statFY") }
+                    R.id.statMontly -> {
+                        setUpMontlyYr(0)
+                        context?.let { KrisheUtils.toastAction(it,"Monthly") }
+                    }
+                    R.id.statFY -> {
+                        setUpMontlyYr(1)
+                        context?.let { KrisheUtils.toastAction(it,"This FY") }
+                    }
                 }
             }
 
         })
 
         return binding.root
+    }
+
+    private fun setUpMontlyYr(i: Int) {
+
+        if (i==0) {
+            binding.reportsSubmitted.text = jsonObject.optString("dataMSubmitted")
+            binding.approvedByAdmin.text = jsonObject.optString("dataMApproved")
+            binding.implementsUnderActive.text = jsonObject.optString("dataMFollowUp")
+        } else {
+            binding.reportsSubmitted.text = jsonObject.optString("dataYSubmitted")
+            binding.approvedByAdmin.text = jsonObject.optString("dataYApproved")
+            binding.implementsUnderActive.text = jsonObject.optString("dataYFollowUp")
+        }
+
     }
 
     override fun onClick(v: View?) {
@@ -93,6 +116,11 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
 
     }
 
+    override fun onSuccessStatistics(msg: String) {
+        jsonObject = JSONObject(msg)
+        setUpMontlyYr(0)
+    }
+
     private fun checkListSetUp() {
         sessions.setUserString("10",KrisheUtils.userID)
 
@@ -107,6 +135,19 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
             val resObj = sessions.getUserObj(KrisheUtils.implementListSession, ImplementsDataRes::class.java) as ImplementsDataRes
             viewModel.setImplementList(resObj.data)
         }
+    }
+    private fun checkStatisticYMtSetUp() {
+            if (KrisheUtils.isOnline(ctx)) {
+                val paramJson = JSONObject()
+                paramJson.put("userID", sessions.getUserString(KrisheUtils.userID))
+                paramJson.put("fromDate", KrisheUtils.dateFLYMTime("FDM"))
+                paramJson.put("toDate", KrisheUtils.dateFLYMTime("LDM"))
+                paramJson.put("fromYDate", KrisheUtils.dateFLYMTime("FDY"))
+                paramJson.put("toYDate", KrisheUtils.dateFLYMTime("LDY"))
+                viewModel.getStatisticImplement(paramJson)
+            } else {
+                KrisheUtils.toastAction(ctx, getString(R.string.no_internet))
+            }
     }
 
 }

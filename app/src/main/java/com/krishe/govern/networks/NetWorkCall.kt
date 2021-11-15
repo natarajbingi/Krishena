@@ -40,6 +40,7 @@ class NetWorkCall {
         private const val HEADER_PRAGMA = "Pragma"
         private const val governanceImplements = "/governance/implements/"
         private const val GET_IMPLEMENT = "/get_implement"
+        private const val GET_STATISTIC_IMPLEMENT = "/get_statistic_implement"
         private const val ADD_IMPLEMENT = "/add_implement"
         private const val UPDATE_IMPLEMENT = "/update_implement"
         private const val REMOVE_IMPLEMENT = "/remove_implement"
@@ -158,6 +159,30 @@ class NetWorkCall {
                     })
 
                 //return@withContext implementsDataRes
+            }
+        }
+
+        suspend fun getStatisticImplement(v: InitIReportCallBackReturn, getImplParam : JSONObject) {
+            Log.e("TAG", "getStatisticImplement param: $getImplParam")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson(GET_STATISTIC_IMPLEMENT, getImplParam)
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject) {
+                            Log.e("TAG", "onResponseJSONObject: ${response}")
+                            if(response.optString("Success") == "true"){
+
+                                v.onSuccessStatistics(response.toString())
+                            } else {
+                                v.onError( response.optString("data").toString())
+                                v.onSuccessStatistics(response.toString())
+                            }
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onError("Failed")
+                        }
+                    })
             }
         }
 

@@ -7,4 +7,5 @@ interface InitIReportCallBack {
     fun onPrHide()
     fun onPrShow()
     fun onSuccessImplementList(list: ImplementsDataRes)
+    fun onSuccessStatistics(msg: String)
 }

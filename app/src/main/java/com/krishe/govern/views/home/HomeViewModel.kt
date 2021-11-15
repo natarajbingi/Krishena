@@ -10,6 +10,7 @@ import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.utils.Sessions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class HomeViewModel(application: Application) : BaseViewModel(application), InitIReportCallBackReturn {
 
@@ -32,6 +33,13 @@ class HomeViewModel(application: Application) : BaseViewModel(application), Init
         }
     }
 
+    fun getStatisticImplement(paramJson: JSONObject) {
+        view.onPrShow()
+        viewModelScope.launch(Dispatchers.IO) {
+            NetWorkCall.getStatisticImplement(this@HomeViewModel, paramJson)
+        }
+    }
+
     override fun onError(msg: String) {
         view.onPrHide()
     }
@@ -42,6 +50,11 @@ class HomeViewModel(application: Application) : BaseViewModel(application), Init
         sessions.setUserString(KrisheUtils.dateTime("nope"), KrisheUtils.oldProcessingDate)
         setImplementList(res.data)
        // Log.e("TAG", "onSuccessImplementList: "+list)
+    }
+
+    override fun onSuccessStatistics(msg: String) {
+        view.onPrHide()
+        view.onSuccessStatistics(msg)
     }
 
     fun setImplementList(data: List<Data>) {

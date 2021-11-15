@@ -80,6 +80,39 @@ class KrisheUtils {
             return dateFormat.format(date).toString()
         }
 
+        @SuppressLint("SimpleDateFormat")
+        fun dateFLYMTime(string: String): String {
+            val date = Date()
+            val dateFormat =SimpleDateFormat("yyyy-MM")
+            val dateYYFormat =SimpleDateFormat("yyyy-")
+            return when (string) {
+                "FDY" -> {
+                    dateYYFormat.format(date).toString()+"01-01"
+                }
+                "LDY" -> {
+                    dateYYFormat.format(date).toString()+"12-31"
+                }
+                "FDM" -> {
+                    dateFormat.format(date).toString()+"-01"
+                }
+                "LDM" -> {
+                    dateFormat.format(date).toString()+"-"+ getLastDayOf(date.month,date.year)
+                }
+                else -> dateFormat.format(date).toString()
+            }
+        }
+
+        fun getLastDayOf(month: Int, year: Int): String {
+            return when (month) {
+                Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> "30"
+                Calendar.FEBRUARY -> {
+                    if (year % 4 == 0) {
+                        "29"
+                    } else "28"
+                }
+                else -> "31"
+            }
+        }
         /* Global Alertdialog for application*/
         fun alertDialogShowOK(
             context: Context,
