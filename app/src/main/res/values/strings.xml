@@ -20,6 +20,30 @@
     <string name="no_internet">Internet is not available.</string>
     <string name="select_implement">Select Implement</string>
     <string name="scan_qr">Scan QR</string>
+    <string name="implement_name">Implement Name</string>
+    <string name="implement_type">Implement Type</string>
+    <string name="ownership">Ownership</string>
+    <string name="implement_id">Implement ID</string>
+
+    <string name="how_do_you_define_implement_condition">How do you define Implement Condition? *</string>
+    <string name="implement_is_perfectly_okay">Implement is Perfectly OKAY</string>
+    <string name="implement_is_okay_but_schedule_service_is_due">Implement is Okay BUT schedule service is due</string>
+    <string name="implement_is_okay_but_requires_minor_repairs">Implement is Okay BUT requires minor repairs</string>
+    <string name="implement_is_not_okay_breakdown_major_repairs_and_parts_are_needed"><![CDATA[Implement is NOT Okay – Breakdown – Major repairs & parts are needed]]></string>
+    <string name="implement_is_not_okay_can_be_scrapped">Implement is NOT Okay – Can be scrapped</string>
+
+    <string name="other_please_enter_your_remarks_in_the_box_below">Other – Please enter your remarks in the box below</string>
+
+    <string name="additional_report_ncomments">Additional Report \nComments</string>
+    <string name="other_report_comments">Other Report Comments</string>
+    <string name="is_implement_s_schedule_service_done">Is Implement\'s Schedule Service done? *</string>
+    <string name="other_comments">Other Comments</string>
+
+    <string name="is_implement_s_pre_seasonal_readiness_done_for_upcoming_season">Is Implement\'s \'Pre-Seasonal readiness\' done for upcoming season? *</string>
+    <string name="please_select_the_nature_of_breakdown">Please select the nature of Breakdown *</string>
+    <string name="minor_can_be_resolved_in_field_by_local_technicians_in_0_to_1_day">Minor – Can be resolved in field by local technicians in 0 to 1 day</string>
+    <string name="moderate_can_be_resolved_by_the_dealer_service_team_in_0_to_2_days">Moderate – Can be resolved by the dealer service team in 0 to 2 days</string>
+    <string name="major_immediate_intervention_of_m_amp_m_team_is_needed"><![CDATA[Major – Immediate intervention of M&M team is needed]]></string>
 
     <string-array name="reportsArray">
         <item>Select</item>
@@ -42,7 +66,7 @@
 
     <string-array name="reportsTypeArray">
         <item>Select</item>
-        <item>Monthly maintenance report</item>
+        <item>Implement Condition Report</item>
         <item>Breakdown report</item>
         <item>Pre-season Checklist</item>
     </string-array>

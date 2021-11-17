@@ -72,7 +72,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     private fun initSetUp() {
 
         currentLinearLayout = when (newReportModelReq.reportTypeName) {
-            "Monthly maintenance report" -> {
+            "Implement Condition Report" -> {
                 currentLinearLayoutVal = 1
                 binding.monthlyMainRepoLayout
             }
@@ -216,12 +216,12 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
             1 -> {
                 binding.reportCommentsEditext.setText(newReportModelReq.reportComment)
                 when (newReportModelReq.currentImplementStatus) {
-                    "Implement is Perfectly OKAY" -> binding.radioButton1.isChecked = true
-                    "Implement is Okay BUT schedule service is due" -> binding.radioButton2.isChecked = true
-                    "Implement is Okay BUT requires minor repairs" -> binding.radioButton3.isChecked = true
-                    "Implement is NOT Okay – Breakdown – Major repairs & parts are needed" -> binding.radioButton4.isChecked = true
-                    "Implement is NOT Okay – Can be scrapped" -> binding.radioButton5.isChecked = true
-                    "Other" -> binding.radioButton6.isChecked = true
+                    getString(R.string.implement_is_perfectly_okay) -> binding.radioButton1.isChecked = true
+                    getString(R.string.implement_is_okay_but_schedule_service_is_due) -> binding.radioButton2.isChecked = true
+                    getString(R.string.implement_is_okay_but_requires_minor_repairs) -> binding.radioButton3.isChecked = true
+                    getString(R.string.implement_is_not_okay_breakdown_major_repairs_and_parts_are_needed) -> binding.radioButton4.isChecked = true
+                    getString(R.string.implement_is_not_okay_can_be_scrapped) -> binding.radioButton5.isChecked = true
+                    getString(R.string.other_please_enter_your_remarks_in_the_box_below) -> binding.radioButton6.isChecked = true
                 }
             }
             2 -> {
@@ -230,23 +230,23 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 binding.preSeasonalServiceComment.setText(strRBCmt[0])
                 binding.preSeasonalReadinessComment.setText(strRBCmt[1])
                 when (strRB[0]) {
-                    "Yes" -> binding.radiopreSeasonalServiceButton1.isChecked = true
-                    "No" -> binding.radiopreSeasonalServiceButton2.isChecked = true
-                    "Other" -> binding.radiopreSeasonalServiceButton3.isChecked = true
+                    getString(R.string.yes) -> binding.radiopreSeasonalServiceButton1.isChecked = true
+                    getString(R.string.no) -> binding.radiopreSeasonalServiceButton2.isChecked = true
+                    getString(R.string.other_please_enter_your_remarks_in_the_box_below) -> binding.radiopreSeasonalServiceButton3.isChecked = true
                 }
                 when (strRB[1]) {
-                    "Yes" -> binding.radiopreSeasonalReadinessButton1.isChecked = true
-                    "No" -> binding.radiopreSeasonalReadinessButton2.isChecked = true
-                    "Other" -> binding.radiopreSeasonalReadinessButton3.isChecked = true
+                    getString(R.string.yes) -> binding.radiopreSeasonalReadinessButton1.isChecked = true
+                    getString(R.string.no) -> binding.radiopreSeasonalReadinessButton2.isChecked = true
+                    getString(R.string.other_please_enter_your_remarks_in_the_box_below) -> binding.radiopreSeasonalReadinessButton3.isChecked = true
                 }
             }
             3 -> {
                 binding.reportBreakdownEditext.setText(newReportModelReq.reportComment)
                 when (newReportModelReq.currentImplementStatus) {
-                    "Minor – Can be resolved in field by local technicians in 0 to 1 day" -> binding.radioBreakdownButton1.isChecked = true
-                    "Moderate – Can be resolved by the dealer service team in 0 to 2 days" -> binding.radioBreakdownButton2.isChecked = true
-                    "Major – Immediate intervention of M&M team is needed" -> binding.radioBreakdownButton3.isChecked = true
-                    "Other" -> binding.radioBreakdownButton4.isChecked = true
+                    getString(R.string.minor_can_be_resolved_in_field_by_local_technicians_in_0_to_1_day) -> binding.radioBreakdownButton1.isChecked = true
+                    getString(R.string.moderate_can_be_resolved_by_the_dealer_service_team_in_0_to_2_days) -> binding.radioBreakdownButton2.isChecked = true
+                    getString(R.string.major_immediate_intervention_of_m_amp_m_team_is_needed) -> binding.radioBreakdownButton3.isChecked = true
+                    getString(R.string.other_please_enter_your_remarks_in_the_box_below) -> binding.radioBreakdownButton4.isChecked = true
                 }
             }
         }
@@ -256,8 +256,11 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
          when (currentLinearLayoutVal) {
             1 -> {
                 val radioCheck = binding.currentImplementStatusGrp.checkedRadioButtonId
-                return if (radioCheck == -1 || binding.reportCommentsEditext.text.toString().isEmpty()) {
-                    KrisheUtils.toastAction(this, "Implement State & Comments are Mandatory")
+                return if (radioCheck == -1 ) {
+                    KrisheUtils.toastAction(this, "Implement State is Mandatory")
+                    true
+                } else if (radioCheck == R.id.radioButton6 && binding.reportCommentsEditext.text.toString().isEmpty()) {
+                    KrisheUtils.toastAction(this, "Comments are Mandatory")
                     true
                 } else {
                     val rb = findViewById<View>(radioCheck) as RadioButton
@@ -269,12 +272,16 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
             2 -> {
                 val radioCheck1 = binding.preSeasonalServiceGrp.checkedRadioButtonId
                 val radioCheck2 = binding.preSeasonalReadinessGrp.checkedRadioButtonId
-                return if (radioCheck1 == -1 || radioCheck2 == -1
-                        || binding.preSeasonalServiceComment.text.toString().isEmpty()
-                        || binding.preSeasonalReadinessComment.text.toString().isEmpty()){
-                    KrisheUtils.toastAction(this, "Schedule Service & pre seasonal readiness & Comments are Mandatory")
+                return if (radioCheck1 == -1 || radioCheck2 == -1){
+                    KrisheUtils.toastAction(this, "Schedule Service & pre seasonal readiness")
                     true
-                } else {
+                } else if (radioCheck1 == R.id.radiopreSeasonalServiceButton3 && binding.preSeasonalServiceComment.text.toString().isEmpty()) {
+                    KrisheUtils.toastAction(this, "Schedule Service comments are Mandatory")
+                    true
+                }  else if (radioCheck2 == R.id.radiopreSeasonalReadinessButton3 && binding.preSeasonalReadinessComment.text.toString().isEmpty()) {
+                    KrisheUtils.toastAction(this, "pre seasonal readiness comments are Mandatory")
+                    true
+                }  else {
                     val rb = findViewById<View>(radioCheck1) as RadioButton
                     val rb2 = findViewById<View>(radioCheck2) as RadioButton
                     val strRdBtn = rb.text.toString() +"_"+ rb2.text.toString()
@@ -287,19 +294,24 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
             }
             3 -> {
                 val radioCheck = binding.BreakdownGrp.checkedRadioButtonId
-                return if ( radioCheck == -1 || binding.reportBreakdownEditext.text.toString().isEmpty()){
-                    KrisheUtils.toastAction(this, "Nature of Breakdown & Comments are Mandatory")
+                return if ( radioCheck == -1 ){
+                    KrisheUtils.toastAction(this, "Nature of Breakdown is Mandatory")
                     true
-                } else {
+                } else if (radioCheck == R.id.radioBreakdownButton4 && binding.reportBreakdownEditext.text.toString().isEmpty()) {
+                    KrisheUtils.toastAction(this, "Comments are Mandatory")
+                    true
+                }  else {
                     val rb = findViewById<View>(radioCheck) as RadioButton
                     newReportModelReq.currentImplementStatus = rb.text.toString()
                     newReportModelReq.reportComment = binding.reportBreakdownEditext.text.toString()
                     false
                 }
             }
-            else -> return false
+            else -> {
+                KrisheUtils.toastAction(this, "Something wrong, try again.")
+                return true
+            }
         }
-
 
     }
 
