@@ -40,31 +40,38 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
     private lateinit var ctx: Context
     private lateinit var binding: InitReportsFragmentBinding
     private lateinit var viewModel: InitReportViewModel
-    private lateinit var newReportModelReq : NewReportModelReq
+    private lateinit var newReportModelReq: NewReportModelReq
     private var implementID = ""
     private var latitude = 0.0
     private var longitude = 0.0
-    private var scanningProgress = 0
 
     companion object {
         var newReportModelReqData: MutableLiveData<NewReportModelReq> = MutableLiveData()
         fun newInstance() = InitReportFragment()
     }
 
-    override fun onAttach(context : Context) {
-        super.onAttach(context )
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         ctx = context
         sessions = Sessions(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = DataBindingUtil.inflate(inflater,R.layout.init_reports_fragment,container,false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.init_reports_fragment, container, false)
         viewModel = ViewModelProvider(this).get(InitReportViewModel::class.java)
         activity = requireActivity()
         binding.initReportModel = viewModel
 
 
-        context?.registerReceiver(gpsReceiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+        context?.registerReceiver(
+            gpsReceiver,
+            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        );
 
         // for QR code scanner result
         binding.scanQrCode.setOnClickListener {
@@ -72,10 +79,9 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
             val fragment = MainFragment()
             fragment.onViewAvailable(this)
             MainActivity.fragmentSetter.postValue(fragment)
-            scanningProgress = 1
 
-           /* val action = InitReportFragmentDirections.actionInitReportFragmentToMainFragment()
-            it.findNavController().navigate(action)*/
+            /* val action = InitReportFragmentDirections.actionInitReportFragmentToMainFragment()
+             it.findNavController().navigate(action)*/
         }
 
         binding.addImageNxt.setOnClickListener {
@@ -83,9 +89,9 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         }
 
         val locationSwitch = sessions.getUserString(KrisheUtils.locationSwitch)
-        if(locationSwitch != null) binding.locationSwitch.isChecked = locationSwitch != "NO"
+        if (locationSwitch != null) binding.locationSwitch.isChecked = locationSwitch != "NO"
 
-        if (binding.locationSwitch.isChecked){
+        if (binding.locationSwitch.isChecked) {
             checkLocationPermissionAPI29()
             getLocationLatLong()
         }
@@ -103,34 +109,38 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
             sessions.setUserString(value, KrisheUtils.locationSwitch)
         }
 
-        viewModel._scannerToInit.observe(viewLifecycleOwner, {
-            implementID = it
-            KrisheUtils.toastAction(ctx ,implementID)
-            Log.d("_scannerToInit", "$implementID ")
-
+        viewModel.scanningProgress.observe(viewLifecycleOwner, {
+            if (it.peekContent() == 1) {
+                binding.implementNameShow.text = "Implement: ${newReportModelReq.implementName}"
+            } else  if (it.peekContent() == 2) {
+                binding.implementNameShow.text = "Something wrong, Scan proper Implement QR code."
+            }
         })
 
         return binding.root
     }
 
     fun validate() {
-       // val implement = binding.implementListSpinner.selectedItem.toString()
+        // val implement = binding.implementListSpinner.selectedItem.toString()
         val reportType = binding.reportTypeSpinner.selectedItem.toString()
 
-        if (implementID.isEmpty()){
-            KrisheUtils.toastAction(activity,"Scan Implement from QR code")
+        if (implementID.isEmpty()) {
+            KrisheUtils.toastAction(activity, "Scan Implement from QR code")
             return
         }/* implement == "Select" && else { - elect Implement from drop down / s
             implementID = implement
         }*/
 
-        if (reportType == "Select"){
-            KrisheUtils.toastAction(activity,"please Select Report Type")
+        if (reportType == "Select") {
+            KrisheUtils.toastAction(activity, "please Select Report Type")
             return
         }
-        if (binding.locationSwitch.isChecked){
-            if (latitude <= 0){
-                KrisheUtils.toastAction(activity,"Location is mandatory, please enable Location to proceed")
+        if (binding.locationSwitch.isChecked) {
+            if (latitude <= 0) {
+                KrisheUtils.toastAction(
+                    activity,
+                    "Location is mandatory, please enable Location to proceed"
+                )
                 return
             }
         }
@@ -149,24 +159,25 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         regContract.launch(intent)
     }
 
-    private val regContract = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
-        if(result.resultCode == 1){
-            binding.implementNameShow.text = "Implement: "
-            implementID = ""
-            binding.reportTypeSpinner.setSelection(0)
+    private val regContract =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == 1) {
+                binding.implementNameShow.text = "Implement: "
+                implementID = ""
+                binding.reportTypeSpinner.setSelection(0)
+            }
         }
-    }
 
-    fun getLocationLatLong(){
+    fun getLocationLatLong() {
         val gps = GetCurrentGPSLocation(activity)
 
         // check if GPS enabled
         if (gps.canGetLocation()) {
-              latitude = gps.latitude
-              longitude = gps.longitude
-              //Log.d("GetLocationLatLong", "$latitude $longitude")
+            latitude = gps.latitude
+            longitude = gps.longitude
+            //Log.d("GetLocationLatLong", "$latitude $longitude")
 
-            if (latitude <= 0){
+            if (latitude <= 0) {
                 // set Location image dark
                 getLocationLatLong()
             } else {
@@ -184,8 +195,8 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action.equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 //Do your stuff on GPS status change
-                if (KrisheUtils.isLocationEnabled(activity)){
-                    if (binding.locationSwitch.isChecked){
+                if (KrisheUtils.isLocationEnabled(activity)) {
+                    if (binding.locationSwitch.isChecked) {
                         getLocationLatLong()
                     }
                 }
@@ -195,21 +206,13 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
 
     override fun onResume() {
         super.onResume()
-        if (binding.locationSwitch.isChecked){
+        if (binding.locationSwitch.isChecked) {
             getLocationLatLong()
-        }
-        if(scanningProgress == 1){
-            binding.implementNameShow.text = "Implement: ${newReportModelReq.implementName}"
-            scanningProgress = 0
-        }
-        if(scanningProgress == 2){
-            binding.implementNameShow.text = "Something wrong, Scan proper Implement QR code."
-            scanningProgress = 0
         }
     }
 
     // f0r QR c0de scanner result
-    override fun scannerToInit(msg: String ){
+    override fun scannerToInit(msg: String) {
         try {
             val msgJsonObj = JSONObject(msg)
             implementID = msgJsonObj.optString("id")
@@ -218,27 +221,31 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
             newReportModelReq.ownerShip = msgJsonObj.optString("dealership_name")
             newReportModelReq.latitude = latitude.toString()
             newReportModelReq.longitude = longitude.toString()
-        } catch (e:Exception) {
+            viewModel.setScanningProgress(1)
+        } catch (e: Exception) {
             e.printStackTrace()
-            scanningProgress = 2
+            viewModel.setScanningProgress(2)
             Log.e("implementID", " $msg")
-            KrisheUtils.toastAction(ctx , "Something wrong with QR code, scan proper one.")
+            KrisheUtils.toastAction(ctx, "Something wrong with QR code, scan proper one.")
         }
     }
 
     private fun checkLocationPermissionAPI29() {
-        if (checkSinglePermission(activity,Manifest.permission.ACCESS_FINE_LOCATION) &&
-            checkSinglePermission(activity,Manifest.permission.ACCESS_COARSE_LOCATION) &&
-            checkSinglePermission(activity,Manifest.permission.ACCESS_BACKGROUND_LOCATION)) return
-        Log.e(TAG, "checkLocationPermissionAPI29: came" )
+        if (checkSinglePermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkSinglePermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) &&
+            checkSinglePermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        ) return
+        Log.e(TAG, "checkLocationPermissionAPI29: came")
 
         val permList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Log.e(TAG, "checkLocationPermissionAPI29: >=Q" )
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+            Log.e(TAG, "checkLocationPermissionAPI29: >=Q")
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
         } else {
-            Log.e(TAG, "checkLocationPermissionAPI29: <=Q" )
+            Log.e(TAG, "checkLocationPermissionAPI29: <=Q")
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION

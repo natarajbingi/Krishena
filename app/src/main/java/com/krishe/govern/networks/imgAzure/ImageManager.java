@@ -1,21 +1,6 @@
-/**----------------------------------------------------------------------------------
-* Microsoft Developer & Platform Evangelism
-*
-* Copyright (c) Microsoft Corporation. All rights reserved.
-*
-* THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
-* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES 
-* OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-*----------------------------------------------------------------------------------
-* The example companies, organizations, products, domain names,	
-* e-mail addresses, logos, people, places, and events depicted
-* herein are fictitious.  No association with any real company,
-* organization, product, domain name, email address, logo, person,
-* places, or events is intended or should be inferred.
-*----------------------------------------------------------------------------------
-**/
-
 package com.krishe.govern.networks.imgAzure;
+
+import android.util.Log;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
@@ -53,9 +38,7 @@ public class ImageManager {
 
         // Get a reference to a container.
         // The container name must be lower case
-        CloudBlobContainer container = blobClient.getContainerReference("images");
-
-        return container;
+        return blobClient.getContainerReference("images");
     }
 
     public static String UploadImage(InputStream image, int imageLength) throws Exception {
@@ -72,13 +55,13 @@ public class ImageManager {
 
     }
 
-    public static String[] ListImages() throws Exception{
+    public static String[] ListImages() throws Exception {
         CloudBlobContainer container = getContainer();
 
         Iterable<ListBlobItem> blobs = container.listBlobs();
 
         LinkedList<String> blobNames = new LinkedList<>();
-        for(ListBlobItem blob: blobs) {
+        for (ListBlobItem blob : blobs) {
             blobNames.add(((CloudBlockBlob) blob).getName());
         }
 
@@ -90,11 +73,16 @@ public class ImageManager {
 
         CloudBlockBlob blob = container.getBlockBlobReference(name);
 
-        if(blob.exists()){
+        if (blob.exists()) {
             blob.downloadAttributes();
 
             imageLength = blob.getProperties().getLength();
 
+            Log.e("TAG", "GetImage:name " + name);
+            Log.e("TAG", "GetImage:getQualifiedStorageUri " + blob.getQualifiedStorageUri());
+            Log.e("TAG", "GetImage:getStorageUri " + blob.getStorageUri());
+            Log.e("TAG", "GetImage:getUri " + blob.getUri());
+            Log.e("TAG", "GetImage:======================== ");
             blob.download(imageStream);
         }
     }
@@ -102,10 +90,10 @@ public class ImageManager {
     static final String validChars = "abcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();
 
-    static String randomString( int len ){
-        StringBuilder sb = new StringBuilder( len );
-        for( int i = 0; i < len; i++ )
-            sb.append( validChars.charAt( rnd.nextInt(validChars.length()) ) );
+    static String randomString(int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(validChars.charAt(rnd.nextInt(validChars.length())));
         return sb.toString();
     }
 

@@ -16,18 +16,22 @@ import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.home.CommunicationCallBack
 
-class MainFragment : BaseFragment(){
+class MainFragment : BaseFragment() {
     private lateinit var codeScanner: CodeScanner
     private lateinit var activity: Activity
     private lateinit var scannerView: CodeScannerView
     private lateinit var viewModel: MainViewModel
-    var checkCameraPermission:Boolean = false
-//    private val callBackArgs: MainFragmentArgs by navArgs()
+    var checkCameraPermission: Boolean = false
+    var checkSuccessScan: Boolean = false
+
+    //    private val callBackArgs: MainFragmentArgs by navArgs()
     private lateinit var callBack: CommunicationCallBack
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -41,10 +45,14 @@ class MainFragment : BaseFragment(){
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        checkCameraPermission=
+        checkCameraPermission =
             KrisheUtils.checkSinglePermission(activity, Manifest.permission.CAMERA)
         if (!checkCameraPermission) {
-            ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.CAMERA), 50);
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(android.Manifest.permission.CAMERA),
+                50
+            );
         } else {
             initVal(scannerView)
         }
@@ -54,10 +62,11 @@ class MainFragment : BaseFragment(){
         codeScanner = CodeScanner(activity, scannerView)
         codeScanner.decodeCallback = DecodeCallback {
             activity.runOnUiThread {
-                 callBack.scannerToInit(it.text)
+                checkSuccessScan = true
+                callBack.scannerToInit(it.text)
 //               viewModel._scannerToInit.postValue(it.text)
                 parentFragmentManager.popBackStack()
-               // Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
+                // Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
             }
         }
         scannerView.setOnClickListener {
@@ -71,11 +80,15 @@ class MainFragment : BaseFragment(){
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode==50&&grantResults[0]!=-1){
+        if (requestCode == 50 && grantResults[0] != -1) {
             initVal(scannerView)
         } else {
             KrisheUtils.toastAction(activity, "please provide Permission to proceed")
-            ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.CAMERA), 50);
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(android.Manifest.permission.CAMERA),
+                50
+            );
         }
     }
 
@@ -93,4 +106,10 @@ class MainFragment : BaseFragment(){
         super.onPause()
     }
 
+    override fun onDestroy() {
+        if (!checkSuccessScan) {
+            callBack.scannerToInit("Failed or Cancelled scanning")
+        }
+        super.onDestroy()
+    }
 }

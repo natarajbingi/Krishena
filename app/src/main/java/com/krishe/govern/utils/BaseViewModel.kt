@@ -8,6 +8,5 @@ import com.krishe.govern.models.Data
 
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
     var _data: MutableLiveData<List<Data>> = MutableLiveData()
-    var _scannerToInit: MutableLiveData<String> = MutableLiveData()
     var data: LiveData<List<Data>> = _data
 }

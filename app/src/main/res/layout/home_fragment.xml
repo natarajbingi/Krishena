@@ -46,12 +46,13 @@
                 android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
+                <!--#DFE6ED-->
                 <LinearLayout
                     android:id="@+id/newQrCodeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="#DFE6ED"
+                    android:background="@drawable/ripple_grey_bg"
                     android:orientation="horizontal"
                     android:paddingTop="25dp"
                     android:paddingBottom="25dp">
@@ -79,12 +80,13 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
+                <!--#96C3EC-->
                 <LinearLayout
                     android:id="@+id/reportLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="#96C3EC"
+                    android:background="@drawable/ripple_bg"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
