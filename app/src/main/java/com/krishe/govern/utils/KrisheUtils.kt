@@ -34,6 +34,7 @@ class KrisheUtils {
         const val userID = "userID"
         const val implementListSession = "implementListSession"
         const val locationSwitch = "locationSwitch"
+        const val KeepMeSigned = "KeepMeSigned"
 
         fun setSpinnerItems(context: Context, spinner: Spinner, spinnerArray: Array<String>) {
 

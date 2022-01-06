@@ -44,6 +44,12 @@
     <string name="minor_can_be_resolved_in_field_by_local_technicians_in_0_to_1_day">Minor – Can be resolved in field by local technicians in 0 to 1 day</string>
     <string name="moderate_can_be_resolved_by_the_dealer_service_team_in_0_to_2_days">Moderate – Can be resolved by the dealer service team in 0 to 2 days</string>
     <string name="major_immediate_intervention_of_m_amp_m_team_is_needed"><![CDATA[Major – Immediate intervention of M&M team is needed]]></string>
+    <string name="welcome">Welcome,</string>
+    <string name="sign_in_to_continue">Sign in to Continue</string>
+    <string name="enter_user_id">Enter User ID</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="keep_me_signed">Keep me signed</string>
+    <string name="login">LOGIN</string>
 
     <string-array name="reportsArray">
         <item>Select</item>

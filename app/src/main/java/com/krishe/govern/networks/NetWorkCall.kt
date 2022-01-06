@@ -28,12 +28,11 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 
-class NetWorkCall {
-    companion object {
+object NetWorkCall {
         // private val cacheSize = 5 * 1024 * 1024 // 5 MB size
 
-        private const val BASE_URL = "https://krishe-rental.azurewebsites.net"
-        private const val BASE_URL_ = "http://krisheapp.pythonanywhere.com"
+        private const val BASE_URL_AZURE = "https://krishe-rental.azurewebsites.net"
+        private const val BASE_URL_PYTHON_API = "http://krisheapp.pythonanywhere.com"
         private const val API_KEY = "ApiKey"
         private const val KEY = "WqvL33dHhSNs1AjUZPJjv8zJ8J1iD3qE"
         private const val HEADER_CACHE_CONTROL = "Cache-Control"
@@ -85,8 +84,8 @@ class NetWorkCall {
         }
 
         private fun getANReqAzure(url: String): ANRequest<out ANRequest<*>> {
-            Log.e("TAG", "postANReqPythonJson: $BASE_URL$url", )
-            return AndroidNetworking.get("$BASE_URL$url")
+            Log.e("TAG", "postANReqPythonJson: $BASE_URL_AZURE$url", )
+            return AndroidNetworking.get("$BASE_URL_AZURE$url")
                 .addHeaders("Content-Type", "application/json")
                 .addHeaders(API_KEY, KEY)
                 .addHeaders("Accept", "application/json")
@@ -95,8 +94,8 @@ class NetWorkCall {
         }
 
         private fun postANReqPythonJson(url: String, jsonObject: JSONObject): ANRequest<out ANRequest<*>> {
-            Log.e("TAG", "postANReqPythonJson: $BASE_URL_$url", )
-            return AndroidNetworking.post("$BASE_URL_$url")
+            Log.e("TAG", "postANReqPythonJson: $BASE_URL_PYTHON_API$url", )
+            return AndroidNetworking.post("$BASE_URL_PYTHON_API$url")
                 .addHeaders("Content-Type", "application/json")
                 //.addHeaders(API_KEY, KEY)
                 .addHeaders("Accept", "application/json")
@@ -296,7 +295,7 @@ class NetWorkCall {
             }
         }
 
-    }// companion object over
+   // }// companion object over
 
 }
 
