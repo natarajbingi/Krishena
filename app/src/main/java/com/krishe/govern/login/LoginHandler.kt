@@ -11,7 +11,11 @@ interface LoginHandler {
 
     fun onSetPwdError(bool: Boolean)
 
-    fun onLoginCallSuccess(loginRes: String?)
+    fun onLoginCallSuccess(loginRes: String)
 
-    fun onLoginError(msg: String?)
+    fun onLoginError(msg: String)
+
+    fun onPrHide()
+
+    fun onPrShow()
 }

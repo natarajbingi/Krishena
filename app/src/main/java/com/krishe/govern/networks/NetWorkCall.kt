@@ -12,6 +12,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.androidnetworking.interfaces.StringRequestListener
 import com.google.gson.Gson
 import com.jacksonandroidnetworking.JacksonParserFactory
+import com.krishe.govern.login.LoginHandler
 import com.krishe.govern.models.Data
 import com.krishe.govern.models.ImplementsDataRes
 import com.krishe.govern.views.home.InitIReportCallBackReturn
@@ -38,6 +39,7 @@ object NetWorkCall {
         private const val HEADER_CACHE_CONTROL = "Cache-Control"
         private const val HEADER_PRAGMA = "Pragma"
         private const val governanceImplements = "/governance/implements/"
+        private const val LOGIN_IMPLEMENT = "/login_implement"
         private const val GET_IMPLEMENT = "/get_implement"
         private const val GET_STATISTIC_IMPLEMENT = "/get_statistic_implement"
         private const val ADD_IMPLEMENT = "/add_implement"
@@ -180,6 +182,28 @@ object NetWorkCall {
                         override fun onError(anError: ANError?) {
                             Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
                             v.onError("Failed")
+                        }
+                    })
+            }
+        }
+
+        suspend fun loginImplement(v: LoginHandler, getImplParam : JSONObject) {
+            Log.e("TAG", "getMyImplements param: $getImplParam")
+            return withContext(Dispatchers.IO) {
+                postANReqPythonJson(LOGIN_IMPLEMENT, getImplParam)
+                    .getAsJSONObject(object : JSONObjectRequestListener {
+                        override fun onResponse(response: JSONObject) {
+                            Log.e("TAG", "onResponseJSONObject: ${response.toString()}")
+                            if(response.optString("Success") == "true"){
+                                v.onLoginCallSuccess(response.optString("data"))
+                            } else {
+                                v.onLoginError( response.optString("data").toString())
+                            }
+                        }
+
+                        override fun onError(anError: ANError?) {
+                            Log.e("TAG", "anError: ${anError?.localizedMessage.toString()}")
+                            v.onLoginError("Failed")
                         }
                     })
             }

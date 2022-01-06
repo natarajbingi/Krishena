@@ -21,4 +21,6 @@
     <color name="errorText">#DD7081</color>
     <color name="bgError">#FBE192</color>
     <color name="bgLight">#F6F6F6</color>
+    <color name="bgImplemtSelected">#A2EED0</color>
+    <color name="textImplemtSelected">#156143</color>
 </resources>

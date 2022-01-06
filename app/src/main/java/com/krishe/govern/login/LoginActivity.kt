@@ -2,6 +2,7 @@ package com.krishe.govern.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.krishe.govern.MainActivity
@@ -32,9 +33,9 @@ class LoginActivity : BaseActivity(), LoginHandler {
     }
 
     override fun onClickLoginBtn() {
-        /*if (binding.keepMeSigned.isChecked) {
+        if (binding.keepMeSigned.isChecked) {
             sessions.setUserString("YES", KrisheUtils.KeepMeSigned)
-        }*/
+        }
 
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -54,12 +55,22 @@ class LoginActivity : BaseActivity(), LoginHandler {
         if (bool) binding.edPassword.error = "Invalid password" else binding.edPassword.error = null
     }
 
-    override fun onLoginCallSuccess(loginRes: String?) {
-        //
+    override fun onLoginCallSuccess(loginRes: String) {
+        Log.e("TAG", "onLoginCallSuccess: $loginRes" )
+        sessions.setUserString(loginRes, KrisheUtils.userID)
+        onClickLoginBtn()
     }
 
-    override fun onLoginError(msg: String?) {
+    override fun onLoginError(msg: String) {
+        onClickLoginFailed()
+    }
 
+    override fun onPrHide() {
+        hidePbar()
+    }
+
+    override fun onPrShow() {
+        showPbar(this)
     }
 
     override fun onClickTextView() {

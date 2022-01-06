@@ -4,22 +4,25 @@ import android.app.Application
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.databinding.ObservableField
+import androidx.lifecycle.viewModelScope
+import com.krishe.govern.networks.NetWorkCall
 import com.krishe.govern.utils.BaseViewModel
+import com.krishe.govern.utils.KrisheUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 
-class LoginViewModel(application: Application) : BaseViewModel(application) {
+class LoginViewModel(application: Application) : BaseViewModel(application),LoginHandler {
 
     var email: ObservableField<String>? = null
     var pwd: ObservableField<String>? = null
     lateinit var view: LoginHandler
+    var paramJson = JSONObject()
 
     fun setLoginVar(loginHandler: LoginHandler) {
         email = ObservableField()
         pwd = ObservableField()
         this.view = loginHandler
-    }
-
-    fun loginMe() {
-        view.onClickLoginBtn()
     }
 
     fun loginBtn() {
@@ -32,18 +35,27 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
             // _emailText.setError(null);
         }
 
-        if (pwd!!.get() == null || pwd!!.get()!!.isEmpty() || pwd!!.get()!!.length < 4) {
+        /*if (pwd!!.get() == null || pwd!!.get()!!.isEmpty() || pwd!!.get()!!.length < 4) {
             view.onSetPwdError(true)
             valid = false
         } else {
             view.onSetPwdError(false)
-        }
+        }*/
 
         if (valid) {
-            view.onClickLoginBtn()
+            loginRestFulApi()
         } else {
             view.onClickLoginFailed()
         }
+    }
+
+    private fun loginRestFulApi() {
+        paramJson.put("userID", email!!.get())
+        view.onPrShow()
+        viewModelScope.launch(Dispatchers.IO) {
+            NetWorkCall.loginImplement(this@LoginViewModel, paramJson)
+        }
+
     }
 
     fun emailWatcher(): TextWatcher? {
@@ -71,5 +83,43 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
                 pwd?.set(editable.toString())
             }
         }
+    }
+
+    override fun onClickTextView() {
+
+    }
+
+    override fun onClickLoginBtn() {
+
+    }
+
+    override fun onClickLoginFailed() {
+
+    }
+
+    override fun onSetEmailError(bool: Boolean) {
+
+    }
+
+    override fun onSetPwdError(bool: Boolean) {
+
+    }
+
+    override fun onLoginCallSuccess(loginRes: String) {
+        view.onPrHide()
+        view.onLoginCallSuccess(loginRes.split("_").get(1))
+    }
+
+    override fun onLoginError(msg: String) {
+        view.onPrHide()
+        view.onLoginError("Login failed, Please try again.")
+    }
+
+    override fun onPrHide() {
+
+    }
+
+    override fun onPrShow() {
+
     }
 }

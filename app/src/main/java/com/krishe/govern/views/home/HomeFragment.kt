@@ -122,7 +122,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
     }
 
     private fun checkListSetUp() {
-        sessions.setUserString("10",KrisheUtils.userID)
+        //sessions.setUserString("10",KrisheUtils.userID)
 
         val checkDate: String? = sessions.getUserString( KrisheUtils.oldProcessingDate)
         if (checkDate == null || !KrisheUtils.dateTime("nope").equals(checkDate)) {

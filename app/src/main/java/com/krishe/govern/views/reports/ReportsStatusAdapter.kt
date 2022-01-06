@@ -62,7 +62,6 @@ class ReportsStatusAdapter(val mListener: OnReportItemClickListener) :
                 else -> itemView.context.getDrawable(R.drawable.custom_round_orange)
             }
 
-
             itemView.setOnClickListener {
                 if (boolean) {
                     itemBinding.statusGraphicLayout.visibility = View.VISIBLE
