@@ -1,6 +1,7 @@
 package com.krishe.govern.views.newReport
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -95,6 +96,11 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
             binding.backButton.text = "Edit"
 
             if (newReportModelReq.nameImageModel != null && newReportModelReq.nameImageModel.isNotEmpty()) {
+                val arr = newReportModelReq.implementName.split("_")
+                if (arr.size > 1) {
+                    newReportModelReq.implementName = arr[0]
+                    newReportModelReq.center = arr[1]
+                }
                 viewModel.defaultData.clear()
                 viewModel.defaultData.addAll(nameImageModelObj(newReportModelReq.nameImageModel))
             }
@@ -108,6 +114,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
         binding.implementName.text = newReportModelReq.implementName
         binding.implementId.text = newReportModelReq.implementID
+        binding.implementIdCenter.text = newReportModelReq.center
         binding.implementType.text = newReportModelReq.reportTypeName
         binding.ownerShip.text = newReportModelReq.ownerShip
 
@@ -161,6 +168,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
                 val g = Gson()
                 val toJsonStr = g.toJson(viewModel.defaultData)
+                newReportModelReq.implementName = newReportModelReq.implementName + "_" + newReportModelReq.center
                 newReportModelReq.nameImageModel = toJsonStr
                 testU = false
                 if (from == "fragment") {
@@ -541,6 +549,10 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 ifShowStepOneImagesLayout()
 
             } )
+    }
+
+    override fun onItemZoom(bitmap : Bitmap) {
+        KrisheUtils.popUpImg(this,null,"Selected Image","",bitmap,"bitMap")
     }
 
     private fun onBackPressMethod() {

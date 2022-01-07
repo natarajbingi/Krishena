@@ -2,24 +2,30 @@ package com.krishe.govern.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.LocationManager
 import android.media.MediaScannerConnection
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
+import android.util.Base64
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.view.View
+import android.view.Window
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.krishe.govern.BuildConfig
+import com.krishe.govern.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -28,8 +34,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class KrisheUtils {
-    companion object {
+object KrisheUtils {
         const val oldProcessingDate = "oldProcessingDate"
         const val userID = "userID"
         const val implementListSession = "implementListSession"
@@ -208,5 +213,61 @@ class KrisheUtils {
                 res != null ?: Log.d("LogRes", g.toJson(res))
             }
         }
-    }
+        fun popUpImg(
+            context: Context?,
+            uri: Uri?,
+            ImgCredit: String?,
+            encodedImgORUrl: String?,
+            bitmap: Bitmap?,
+            Type: String
+        ): Dialog? {
+            val dialog = Dialog(context!!, R.style.Base_ThemeOverlay_AppCompat_Light)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.photo_popup)
+            val photoId = dialog.findViewById<View>(R.id.photoId) as RelativeLayout
+
+            //        RelativeLayout signId = (RelativeLayout) dialog.findViewById(R.id.signId);
+            //        signId.setVisibility(View.GONE);
+            photoId.visibility = View.VISIBLE
+            val closeImgPopUp = dialog.findViewById<View>(R.id.closeImgPopUp) as ImageView
+            val imgPopup = dialog.findViewById<View>(R.id.imgPopup) as ImageView
+            val headingText = dialog.findViewById<View>(R.id.headingText) as TextView
+            headingText.text = ImgCredit
+            closeImgPopUp.setOnClickListener { dialog.dismiss() }
+            dialog.setCancelable(true)
+            if (Type == "URI") {
+                imgPopup.setImageURI(uri)
+            } else if (Type == "NOT_URL") {
+                val bytes = Base64.decode(encodedImgORUrl, Base64.DEFAULT)
+                val bitmap1 = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                imgPopup.setImageBitmap(bitmap1)
+            } else if (Type == "bitMap") {
+                imgPopup.setImageBitmap(bitmap)
+            } else { //if (!Type.equals("URL")) {
+                try {
+                    // Loads given image
+                    //  int size = (int) Math.ceil(Math.sqrt(800 * 600));
+                    /*Picasso.get()
+                        .load(encodedImgORUrl) // .transform(new BitmapTransform(800, 600))
+                        // .resize(size, size)
+                        // .centerInside()
+                        // .noPlaceholder()
+                        .placeholder(R.drawable.loader)
+                        .error(R.drawable.load_failed)
+                        .into(imgPopup)*/
+                    Glide.with(context)
+                        .load(encodedImgORUrl)
+                        //.centerCrop()
+                        .placeholder(com.krishe.govern.R.drawable.loader)
+                        .error(com.krishe.govern.R.drawable.blankimge)
+                        .into(imgPopup)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            dialog.show()
+            return dialog
+        }
+
+
 }

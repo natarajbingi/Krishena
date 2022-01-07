@@ -1,6 +1,7 @@
 package com.krishe.govern.views.newReport
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Handler
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -69,6 +71,14 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
                 if (item.isEditable)
                     mListener.onItemRemove(item, adapterPosition)
             }
+            itemBinding.imgView.setOnLongClickListener {
+
+                //if (item.isEditable){
+                    val bitmap : Bitmap = itemBinding.imgView.drawable.toBitmap()
+                    mListener.onItemZoom(bitmap)
+                //}
+                return@setOnLongClickListener true
+            }
 
         }
     }
@@ -81,7 +91,7 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
         try {
             Glide.with(imgView.context)
                 .load(imgPathFile)
-                .centerCrop()
+                //.centerCrop()
                 .placeholder(R.drawable.loader)
                 .error(R.drawable.blankimge)
                 .into(imgView)
@@ -117,7 +127,7 @@ class NewReportAdapter(val mListener: OnItemClickListener) :
                     try {
                         Glide.with(imageView.context)
                             .load(bitmap)
-                            .centerCrop()
+                            //.centerCrop()
                             .placeholder(R.drawable.loader)
                             .error(R.drawable.blankimge)
                             .into(imageView)

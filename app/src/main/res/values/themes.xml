@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.KrishEGovernance" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.KrishEGovernance" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/radioOn</item>
         <item name="colorPrimaryVariant">@color/white</item>

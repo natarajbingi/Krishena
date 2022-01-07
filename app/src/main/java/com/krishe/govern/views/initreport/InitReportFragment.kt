@@ -25,7 +25,7 @@ import com.krishe.govern.databinding.InitReportsFragmentBinding
 import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.GetCurrentGPSLocation
 import com.krishe.govern.utils.KrisheUtils
-import com.krishe.govern.utils.KrisheUtils.Companion.checkSinglePermission
+import com.krishe.govern.utils.KrisheUtils.checkSinglePermission
 import com.krishe.govern.utils.Sessions
 import com.krishe.govern.views.home.CommunicationCallBack
 import com.krishe.govern.views.newReport.NewReportActivity
@@ -88,8 +88,8 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
             validate()
         }
 
-        val locationSwitch = sessions.getUserString(KrisheUtils.locationSwitch)
-        if (locationSwitch != null) binding.locationSwitch.isChecked = locationSwitch != "NO"
+//        val locationSwitch = sessions.getUserString(KrisheUtils.locationSwitch)
+//        if (locationSwitch != null) binding.locationSwitch.isChecked = locationSwitch != "NO"
 
         if (binding.locationSwitch.isChecked) {
             checkLocationPermissionAPI29()
@@ -215,13 +215,15 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
     override fun scannerToInit(msg: String) {
         try {
             val msgJsonObj = JSONObject(msg)
-            implementID = msgJsonObj.optString("id")
-            newReportModelReq = NewReportModelReq(msgJsonObj.optString("id"))
+            implementID = msgJsonObj.optString("implement_code")
+            newReportModelReq = NewReportModelReq(msgJsonObj.optString("implement_code"))
             newReportModelReq.implementName = msgJsonObj.optString("implement_type")
             newReportModelReq.ownerShip = msgJsonObj.optString("dealership_name")
+            newReportModelReq.center = msgJsonObj.optString("center")
             newReportModelReq.latitude = latitude.toString()
             newReportModelReq.longitude = longitude.toString()
             viewModel.setScanningProgress(1)
+            Log.e("implementID", " $msg")
         } catch (e: Exception) {
             e.printStackTrace()
             viewModel.setScanningProgress(2)

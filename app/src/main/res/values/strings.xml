@@ -5,7 +5,7 @@
     <string name="statistics">Statistics</string>
     <string name="krish_e_implement_ngovernance_app">Krish-e Implement \nGovernance App</string>
     <string name="monthly">Monthly</string>
-    <string name="this_fy">This FY</string>
+    <string name="this_fy">Year</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="ok">OK</string>
@@ -24,6 +24,7 @@
     <string name="implement_type">Implement Type</string>
     <string name="ownership">Ownership</string>
     <string name="implement_id">Implement ID</string>
+    <string name="implement_center">Center</string>
 
     <string name="how_do_you_define_implement_condition">How do you define Implement Condition? *</string>
     <string name="implement_is_perfectly_okay">Implement is Perfectly OKAY</string>

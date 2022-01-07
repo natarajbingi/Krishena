@@ -15,6 +15,7 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
     var nameImageModel:  String = "" //List<NameImageModel> = emptyList()
     var currentImplementStatus: String = ""
     var reportComment: String = ""
+    var center: String = ""
 
     constructor(parcel: Parcel) : this(parcel.readString().toString()) {
         id = parcel.readString().toString()
@@ -28,6 +29,7 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
         nameImageModel = parcel.readString().toString()
         currentImplementStatus = parcel.readString().toString()
         reportComment = parcel.readString().toString()
+        center = parcel.readString().toString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -43,6 +45,7 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
         parcel.writeString(nameImageModel)
         parcel.writeString(currentImplementStatus)
         parcel.writeString(reportComment)
+        parcel.writeString(center)
     }
 
     override fun describeContents(): Int {
@@ -71,6 +74,7 @@ data class NewReportModelReq(var implementID: String) : Parcelable {
                 " currentImplementStatus='$currentImplementStatus'," +
                 " reportComment='$reportComment'," +
                 " nameImageModel='$nameImageModel'" +
+                " center='$center'" +
                 ")"
     }
 }

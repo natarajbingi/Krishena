@@ -15,6 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".views.home.HomeFragment">
+
         <LinearLayout
             android:id="@+id/header_title"
             android:layout_width="match_parent"
@@ -146,8 +147,8 @@
                                 android:layout_weight="0.5"
                                 android:background="@drawable/custom_btn_radio"
                                 android:button="@null"
-                                android:gravity="center"
                                 android:checked="true"
+                                android:gravity="center"
                                 android:text="@string/monthly"
                                 android:textColor="@drawable/rbtn_textcolor_selector"
                                 android:textStyle="bold" />
@@ -184,11 +185,11 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/reportsSubmitted"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.15"
                             android:gravity="center"
-                            android:id="@+id/reportsSubmitted"
                             android:text="00"
                             android:textColor="@color/radioOn"
                             android:textSize="17sp"
@@ -212,12 +213,12 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/approvedByAdmin"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.15"
                             android:gravity="center"
                             android:text="00"
-                            android:id="@+id/approvedByAdmin"
                             android:textColor="@color/radioOn"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -240,11 +241,11 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/implementsUnderActive"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.15"
                             android:gravity="center"
-                            android:id="@+id/implementsUnderActive"
                             android:text="00"
                             android:textColor="@color/radioOn"
                             android:textSize="17sp"

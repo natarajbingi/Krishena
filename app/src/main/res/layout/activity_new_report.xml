@@ -43,10 +43,22 @@
                 android:padding="5dp"
                 android:text="@string/implement_name"
                 android:textColor="@color/headerText"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/header_title1"
                 app:layout_constraintTop_toBottomOf="@+id/header_title1" />
+
+            <TextView
+                android:id="@+id/ownerShip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                app:layout_constraintStart_toStartOf="@+id/implementName"
+                app:layout_constraintTop_toBottomOf="@+id/implementName"
+                android:text="@string/ownership"
+                android:textColor="@color/headerText"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/implementType"
@@ -55,22 +67,11 @@
                 android:padding="5dp"
                 android:text="@string/implement_type"
                 android:textColor="@color/headerText"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/implementName"
-                app:layout_constraintTop_toBottomOf="@+id/implementName" />
+                app:layout_constraintStart_toStartOf="@+id/ownerShip"
+                app:layout_constraintTop_toBottomOf="@+id/ownerShip" />
 
-            <TextView
-                android:id="@+id/ownerShip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/ownership"
-                android:textColor="@color/headerText"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/header_title1" />
 
             <TextView
                 android:id="@+id/implementId"
@@ -79,10 +80,22 @@
                 android:padding="5dp"
                 android:text="@string/implement_id"
                 android:textColor="@color/headerText"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/ownerShip"
-                app:layout_constraintTop_toBottomOf="@+id/ownerShip" />
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/implementName"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/implementIdCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/implement_center"
+                android:textColor="@color/headerText"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/implementId"
+                android:textStyle="bold" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView

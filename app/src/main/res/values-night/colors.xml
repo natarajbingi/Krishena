@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="radioOff">#C9CED2</color>
+    <color name="radioOn">#4B5C6B</color>
+    <color name="radioPressed">#72828F</color>
+    <color name="headerText">#505E69</color>
+
+    <color name="borderbg">#f2f2f2</color>
+    <color name="border">#E2E7EB</color>
+    <color name="SuccessButton">#E8833A</color>
+    <color name="ScannerButton">#4D94FE</color>
+    <color name="buttnViewRe">#96C3EC</color>
+    <color name="errorText">#DD7081</color>
+    <color name="bgError">#FBE192</color>
+    <color name="bgLight">#F6F6F6</color>
+    <color name="bgImplemtSelected">#A2EED0</color>
+    <color name="textImplemtSelected">#156143</color>
+</resources>

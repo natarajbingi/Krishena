@@ -44,7 +44,7 @@ class ReportsStatusAdapter(val mListener: OnReportItemClickListener) :
         @SuppressLint("UseCompatLoadingForDrawables")
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         fun bindReport(item: ReportsItemModel, listener: OnReportItemClickListener) {
-            itemBinding.reportName.text = item.implementName +" - "+ item.id
+            itemBinding.reportName.text = item.implementName.split("_").get(0) +" - "+ item.id
 
             val start_dt = item.createdDate
 
