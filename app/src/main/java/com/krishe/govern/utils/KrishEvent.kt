@@ -1,5 +1,8 @@
 package com.krishe.govern.utils
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class KrishEvent<out T>(private val content: T) {
     var hasBeenConsumed = false
         private set

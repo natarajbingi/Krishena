@@ -23,6 +23,9 @@ import com.krishe.govern.views.reports.ReportsFragment
 import java.io.ByteArrayOutputStream
 import java.io.File
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class NewReportAdapter(val mListener: OnItemClickListener) :
     ListAdapter<NameImageModel, NewReportAdapter.NewReportViewHolder>(NewReportDiffCallback()) {
 

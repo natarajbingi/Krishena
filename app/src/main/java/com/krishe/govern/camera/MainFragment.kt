@@ -15,7 +15,9 @@ import com.krishe.govern.R
 import com.krishe.govern.utils.BaseFragment
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.home.CommunicationCallBack
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ * */
 class MainFragment : BaseFragment() {
     private lateinit var codeScanner: CodeScanner
     private lateinit var activity: Activity

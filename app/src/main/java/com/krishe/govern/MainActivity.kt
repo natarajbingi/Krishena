@@ -10,7 +10,9 @@ import com.krishe.govern.camera.MainViewModel
 import com.krishe.govern.databinding.ActivityMainBinding
 import com.krishe.govern.utils.BaseActivity
 import com.krishe.govern.views.home.HomeFragment
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class MainActivity : BaseActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel

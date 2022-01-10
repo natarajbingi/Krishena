@@ -18,7 +18,9 @@ import com.krishe.govern.views.newReport.NewReportModelReq
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 //class ReportsStatusAdapter : RecyclerView.Adapter<ReportsStatusAdapter.ReportsViewHolder>() {
 class ReportsStatusAdapter(val mListener: OnReportItemClickListener) :
     ListAdapter<ReportsItemModel, ReportsStatusAdapter.ReportsViewHolder>(ReportsDiffCallback()) {

@@ -29,6 +29,9 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 object NetWorkCall {
         // private val cacheSize = 5 * 1024 * 1024 // 5 MB size
 

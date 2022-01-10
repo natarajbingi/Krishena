@@ -10,6 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class ReportsViewModel(application: Application) : AndroidViewModel(application), ReportsICallBack {
     // TODO: Implement the ViewModel
     lateinit var view: ReportsICallBack

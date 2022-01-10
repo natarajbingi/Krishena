@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import com.krishe.govern.utils.BaseViewModel
 import com.krishe.govern.utils.KrishEvent
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class InitReportViewModel(application: Application) : BaseViewModel(application) {
 
     private val _scanningProgress = MutableLiveData<KrishEvent<Int>>()

@@ -13,6 +13,9 @@ import java.io.OutputStream;
 import java.security.SecureRandom;
 import java.util.LinkedList;
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 public class ImageManager {
     /*
     **Only use Shared Key authentication for testing purposes!** 

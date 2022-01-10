@@ -2,7 +2,9 @@ package com.krishe.govern.dbsrc
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ * */
 @Dao
 interface ReportItemDao {
 

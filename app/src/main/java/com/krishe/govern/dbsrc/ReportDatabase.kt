@@ -5,7 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ * */
 @Database(entities = [ReportItemTable::class], version = 1)
 abstract class ReportDatabase : RoomDatabase() {
 

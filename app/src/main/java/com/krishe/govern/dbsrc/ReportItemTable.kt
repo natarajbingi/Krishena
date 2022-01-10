@@ -2,8 +2,9 @@ package com.krishe.govern.dbsrc
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-//import com.krishe.govern.views.newReport.NameImageModel
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ * */
 @Entity(tableName = "report_item_table")
 data class ReportItemTable(
     @PrimaryKey(autoGenerate = true) var id: Int,

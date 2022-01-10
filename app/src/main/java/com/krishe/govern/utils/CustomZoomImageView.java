@@ -23,9 +23,10 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
-//import android.widget.ImageView;
-//import com.android.volley.toolbox.NetworkImageView;
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 public class CustomZoomImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     //	private static final String DEBUG = "DEBUG";

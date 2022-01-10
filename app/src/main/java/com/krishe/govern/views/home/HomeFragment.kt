@@ -18,6 +18,9 @@ import com.krishe.govern.views.initreport.InitReportFragment
 import com.krishe.govern.views.reports.ReportsFragment
 import org.json.JSONObject
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 
 class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
 
@@ -56,7 +59,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, InitIReportCallBack {
                     }
                     R.id.statFY -> {
                         setUpMontlyYr(1)
-                        context?.let { KrisheUtils.toastAction(it,"This FY") }
+                        context?.let { KrisheUtils.toastAction(it,"Yearly") }
                     }
                 }
             }

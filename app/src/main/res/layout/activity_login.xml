@@ -77,7 +77,7 @@
                         android:background="@color/white"
                         android:layout_height="wrap_content"
                         android:hint="@string/enter_user_id"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:text=""
                         app:addTextChangedListener="@{viewModel.emailWatcher()}" />
                 </com.google.android.material.textfield.TextInputLayout>

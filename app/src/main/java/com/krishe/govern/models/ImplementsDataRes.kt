@@ -1,5 +1,8 @@
 package com.krishe.govern.models
- 
+
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 data class ImplementsDataRes(
     var status: Boolean,
     var message: String,

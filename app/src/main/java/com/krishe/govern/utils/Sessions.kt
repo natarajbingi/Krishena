@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class Sessions(context: Context?) {
 
     private var pref: SharedPreferences? = null

@@ -11,7 +11,9 @@ import com.krishe.govern.databinding.ActivityLoginBinding
 import com.krishe.govern.utils.BaseActivity
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.utils.Sessions
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class LoginActivity : BaseActivity(), LoginHandler {
     lateinit var binding: ActivityLoginBinding
     lateinit var viewModel: LoginViewModel

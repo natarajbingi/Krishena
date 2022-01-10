@@ -3,6 +3,9 @@ package com.krishe.govern.views.newReport
 import android.os.Parcel
 import android.os.Parcelable
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 data class NewReportModelReq(var implementID: String) : Parcelable {
     var id: String = ""
     var implementName: String = ""

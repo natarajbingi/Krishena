@@ -1,5 +1,7 @@
 package com.krishe.govern.login
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 interface LoginHandler {
     fun onClickTextView()
 

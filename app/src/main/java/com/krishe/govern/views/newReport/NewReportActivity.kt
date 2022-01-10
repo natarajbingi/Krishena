@@ -29,6 +29,9 @@ import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.MediaSource
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack {
 
     private lateinit var viewModel: NewReportViewModel

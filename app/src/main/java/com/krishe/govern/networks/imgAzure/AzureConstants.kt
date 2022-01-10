@@ -7,6 +7,9 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class AzureConstants {
     companion object {
         const val ACCOUNT_NAME = "AccountName=governance;"

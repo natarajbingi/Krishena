@@ -7,11 +7,12 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
 import com.krishe.govern.networks.NetWorkCall
 import com.krishe.govern.utils.BaseViewModel
-import com.krishe.govern.utils.KrisheUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 class LoginViewModel(application: Application) : BaseViewModel(application),LoginHandler {
 
     var email: ObservableField<String>? = null

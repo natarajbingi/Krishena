@@ -1,5 +1,8 @@
 package com.krishe.govern.views.reports
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 interface ReportsICallBack {
     fun onError(msg: String)
     fun onPrHide()

@@ -13,6 +13,9 @@ import android.provider.Settings;
 
 import androidx.appcompat.app.AlertDialog;
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 public class GetCurrentGPSLocation extends BaseActivity implements LocationListener {
 
     private final Context mContext;

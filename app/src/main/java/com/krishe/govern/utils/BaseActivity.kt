@@ -18,6 +18,9 @@ import pl.aprilapps.easyphotopicker.ChooserType
 import pl.aprilapps.easyphotopicker.EasyImage
 import pl.aprilapps.easyphotopicker.MediaFile
 
+/**
+ * Created by Nataraj Bingi on Oct 24, 2021
+ */
 open class BaseActivity : AppCompatActivity() {
 
     /*Images related starts*/
