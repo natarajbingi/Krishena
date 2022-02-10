@@ -34,15 +34,6 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
     var paramJson = JSONObject()
     lateinit var ctx: Context
 
-    /*    val data = listOf<ReportsItemModel>(
-//        ReportsItemModel(1,"Rotavator 1 WLX", "21-Mar-2021", "Krishe", "Submitted"),
-//        ReportsItemModel(2,"Rotavator 2 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
-//        ReportsItemModel(3,"Rotavator 3 WLX", "31-Jul-2021", "Krishe", "Approved"),
-//        ReportsItemModel(4,"Rotavator 4 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
-//        ReportsItemModel(5,"Rotavator 5 WLX", "31-Jul-2021", "Krishe", "Approved"),
-//        ReportsItemModel(6,"Rotavator 6 WLX", "11-Mar-2021", "Krishe", "Follow-up"),
-//        ReportsItemModel(7,"Rotavator 7 WLX", "21-Mar-2021", "Krishe", "Submitted"),
-    )*/
     companion object {
         fun newInstance() = ReportsFragment()
         const val TAG = "ReportsFragment"
@@ -187,7 +178,7 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
     }
 
     override fun onItemClick(item: NewReportModelReq, position: Int) {
-        //KrisheUtils.toastAction(ctx, "Go View page")
+        //  "Go View page"
 
         val intent = Intent(context, NewReportActivity::class.java)
         intent.putExtra("dateModel", item)
@@ -197,7 +188,7 @@ class ReportsFragment : BaseFragment(), ReportsICallBack, OnReportItemClickListe
     }
 
     override fun onItemLongClick(item: NewReportModelReq, position: Int) {
-        //KrisheUtils.toastAction(ctx, "want to delete?")
+        // want to delete?
         val jParam = JSONObject()
         jParam.put("id", item.id)
         jParam.put("userID", sessions.getUserString(KrisheUtils.userID))

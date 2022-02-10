@@ -18,5 +18,7 @@ data class ReportsItemModel(
     val reportTypeId: String,
     val reportTypeName: String,
     val reportStatusForApproval: String,
-    val createdDate: String
+    val createdDate: String,
+    var comments: String,
+    var location: String
 )

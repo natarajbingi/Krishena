@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.Address
+import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +34,8 @@ import com.krishe.govern.views.newReport.NewReportActivity
 import com.krishe.govern.views.newReport.NewReportModelReq
 import com.krishe.govern.views.reports.ReportsFragment.Companion.TAG
 import org.json.JSONObject
+import java.util.*
+
 
 /**
  * Created by Nataraj Bingi on Oct 24, 2021
@@ -45,6 +49,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
     private lateinit var viewModel: InitReportViewModel
     private lateinit var newReportModelReq: NewReportModelReq
     private var implementID = ""
+    private var location = ""
     private var latitude = 0.0
     private var longitude = 0.0
 
@@ -115,7 +120,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         viewModel.scanningProgress.observe(viewLifecycleOwner, {
             if (it.peekContent() == 1) {
                 binding.implementNameShow.text = "Implement: ${newReportModelReq.implementName}"
-            } else  if (it.peekContent() == 2) {
+            } else if (it.peekContent() == 2) {
                 binding.implementNameShow.text = "Something wrong, Scan proper Implement QR code."
             }
         })
@@ -152,6 +157,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         newReportModelReq.reportTypeID = reportType
         newReportModelReq.reportTypeName = reportType
         newReportModelReq.userID = sessions.getUserString("userID").toString()
+        newReportModelReq.location = location
 
         val intent = Intent(this.context, NewReportActivity::class.java)
         newReportModelReqData.postValue(newReportModelReq)
@@ -184,6 +190,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
                 // set Location image dark
                 getLocationLatLong()
             } else {
+                location = getLocationNameWithLatLong(latitude, longitude)
                 return
             }
 
@@ -269,5 +276,13 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+    }
+
+    private fun getLocationNameWithLatLong(latitude: Double, longitude: Double):String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses: List<Address> = geocoder.getFromLocation(latitude, longitude, 1)
+        val retStr = "City: ${addresses[0].locality}, District: ${addresses[0].subAdminArea}, State: ${addresses[0].adminArea}, PostalCode:  ${addresses[0].postalCode}"
+        //Log.e(TAG, retStr)
+        return retStr
     }
 }

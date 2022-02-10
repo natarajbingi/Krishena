@@ -18,6 +18,7 @@ import com.krishe.govern.views.newReport.NewReportModelReq
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
 /**
  * Created by Nataraj Bingi on Oct 24, 2021
  */
@@ -46,19 +47,27 @@ class ReportsStatusAdapter(val mListener: OnReportItemClickListener) :
         @SuppressLint("UseCompatLoadingForDrawables")
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         fun bindReport(item: ReportsItemModel, listener: OnReportItemClickListener) {
-            itemBinding.reportName.text = item.implementName.split("_").get(0) +" - "+ item.id
+            itemBinding.reportName.text = item.implementName.split("_").get(0) + " - " + item.id
 
-            val start_dt = item.createdDate
+            val startDt = item.createdDate
 
             val parser: DateFormat = SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ")
-            val date: Date = parser.parse(start_dt) as Date
+            val date: Date = parser.parse(startDt) as Date
 
             val formatter: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
 
             itemBinding.reportDate.text = formatter.format(date)
             itemBinding.typeName.text = item.reportTypeName
+            if (item.comments == null || item.comments == "") {
+                itemBinding.commentLayout.visibility = View.GONE
+                itemBinding.commentLayoutLine.visibility = View.GONE
+            } else {
+                itemBinding.commentLayout.visibility = View.VISIBLE
+                itemBinding.commentLayoutLine.visibility = View.VISIBLE
+                itemBinding.comment.text = item.comments
+            }
             itemBinding.reportStatusIcon.background = when (item.reportStatusForApproval) {
-                "Submitted","Submittted","Not Approved" -> itemView.context.getDrawable(R.drawable.custom_round_orange)
+                "Submitted", "Submittted", "Not Approved" -> itemView.context.getDrawable(R.drawable.custom_round_orange)
                 "Follow-up" -> itemView.context.getDrawable(R.drawable.custom_round_purple)
                 "Approved" -> itemView.context.getDrawable(R.drawable.custom_round_green)
                 else -> itemView.context.getDrawable(R.drawable.custom_round_orange)
@@ -83,13 +92,13 @@ class ReportsStatusAdapter(val mListener: OnReportItemClickListener) :
             newReportModelReq.ownerShip = item.ownerShip
             newReportModelReq.latitude = item.latitude
             newReportModelReq.longitude = item.longitude
-            newReportModelReq.nameImageModel =  item.nameImageModel
-            newReportModelReq.reportComment =  item.reportComment
-            newReportModelReq.currentImplementStatus =  item.currentImplementStatus
-            newReportModelReq.userID =  item.userID
+            newReportModelReq.nameImageModel = item.nameImageModel
+            newReportModelReq.reportComment = item.reportComment
+            newReportModelReq.currentImplementStatus = item.currentImplementStatus
+            newReportModelReq.userID = item.userID
 
             itemBinding.viewReportClick.setOnClickListener {
-               listener.onItemClick(newReportModelReq, adapterPosition)
+                listener.onItemClick(newReportModelReq, adapterPosition)
             }
             itemView.setOnLongClickListener {
                 listener.onItemLongClick(newReportModelReq, adapterPosition)
@@ -109,7 +118,7 @@ class ReportsStatusAdapter(val mListener: OnReportItemClickListener) :
                 return ReportsViewHolder(binding)
             }
 
-            fun nameImageModelObj(nameImageModel:String): List<NameImageModel> {
+            fun nameImageModelObj(nameImageModel: String): List<NameImageModel> {
                 val gson = Gson()
                 val data: Array<NameImageModel> = gson.fromJson(
                     nameImageModel,

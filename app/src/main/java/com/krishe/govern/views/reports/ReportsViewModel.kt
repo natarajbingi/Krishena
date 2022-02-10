@@ -1,6 +1,7 @@
 package com.krishe.govern.views.reports
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,7 +49,7 @@ class ReportsViewModel(application: Application) : AndroidViewModel(application)
     override fun onSuccess(list: List<ReportsItemModel>) {
         view.onPrHide()
         view.onSuccess(list)
-        // Log.e(ReportsFragment.TAG, "onSuccess: ${list[0].reportName}" )
+        Log.e(ReportsFragment.TAG, "onSuccess: ${list[0]}" )
         data.postValue(list)
     }
 
