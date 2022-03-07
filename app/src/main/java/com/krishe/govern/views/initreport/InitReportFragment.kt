@@ -243,7 +243,8 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
     }
 
     private fun checkLocationPermissionAPI29() {
-        if (checkSinglePermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) &&
+        if (checkSinglePermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+            checkSinglePermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) &&
             checkSinglePermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) &&
             checkSinglePermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         ) return
@@ -252,6 +253,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         val permList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Log.e(TAG, "checkLocationPermissionAPI29: >=Q")
             arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
@@ -259,6 +261,7 @@ class InitReportFragment : BaseFragment(), CommunicationCallBack {
         } else {
             Log.e(TAG, "checkLocationPermissionAPI29: <=Q")
             arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )

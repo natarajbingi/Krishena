@@ -5,10 +5,12 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +21,7 @@ import com.google.gson.Gson
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ActivityNewReportBinding
 import com.krishe.govern.utils.BaseActivity
+import com.krishe.govern.utils.ImageFile
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.initreport.InitReportFragment.Companion.newReportModelReqData
 import com.krishe.govern.views.reports.ReportsStatusAdapter.ReportsViewHolder.Companion.nameImageModelObj
@@ -383,7 +386,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        easyImage!!.handleActivityResult(
+        easyImage?.handleActivityResult(
             requestCode,
             resultCode,
             data,
@@ -392,6 +395,11 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
 
                     adapterItem?.imgPath = imageFiles[0].file.absoluteFile.toString()
+//                    Log.e("TAG", "onMediaFilesPicked: imgPath ${adapterItem?.imgPath}" )
+                    val imageFileObj = ImageFile(imageFiles[0].file.toUri(),adapterItem?.imgPath.toString())
+                    val imgPathStr = imageFileObj.copyFileStream(this@NewReportActivity, imageFiles[0].file.toUri())
+                    adapterItem?.imgPath = imgPathStr
+//                    Log.e("TAG", "onMediaFilesPicked: imgPathStr ${imgPathStr}" )
                     if (isNew) {
                         viewModel.defaultData.add(adapterItem!!)
                     } else {
@@ -461,10 +469,11 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     }
 
     private fun confirmAlertDialog(msg: String) {
-        KrisheUtils.alertDialogShowYesNo(this,msg,
-        { dialog, which ->
+        KrisheUtils.alertDialogShowYesNo(this,msg
+        ) { dialog, which ->
+            binding.forwardDecisionButton.isEnabled = false
             viewModel.imageUploadSet(this)
-        } )
+        }
     }
 
     private fun askNameForImgAlertBox() {
@@ -593,6 +602,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     }
 
     override fun onError(msg: String) {
+        binding.forwardDecisionButton.isEnabled = true
         hidePbar()
     }
 
@@ -606,6 +616,7 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
     override fun onSuccess(msg: String) {
         hidePbar()
+        binding.forwardDecisionButton.isEnabled = true
         runOnUiThread {
             KrisheUtils.alertDialogShowOK(this,msg,R.mipmap.ic_launcher,
                 { dialog, which ->

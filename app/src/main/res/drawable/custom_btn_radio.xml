@@ -12,7 +12,7 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/radioOff" />
 
-            <stroke android:width="1dp" android:color="@color/radioOff" />
+            <stroke android:width="1dp" android:color="@color/radioOff"  />
         </shape>
     </item>
 

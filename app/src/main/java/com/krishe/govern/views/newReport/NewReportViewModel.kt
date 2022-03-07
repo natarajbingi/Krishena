@@ -135,8 +135,8 @@ class NewReportViewModel(application: Application) : AndroidViewModel(applicatio
                     //Log.e("TAG", "imageUploadSet:defaultData $defaultData")
                     boo = true
                 } else {
-                    if (defaultData.get(count).imgPath.contains("/")) { // to check whether the img already uploaded or not..
-                        val uri = File(defaultData.get(count).imgPath).toUri() //Uri.parse()
+                    if (defaultData[count].imgPath.contains("/")) { // to check whether the img already uploaded or not..
+                        val uri = File(defaultData[count].imgPath).toUri() //Uri.parse()
                         val uploadedImage = imageUploadAzure(uri, context, count)
                         // defaultData.get(count).imgPath = uploadedImage
                     } else {
