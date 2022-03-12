@@ -14,6 +14,7 @@ import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -21,16 +22,20 @@ import com.google.gson.Gson
 import com.krishe.govern.R
 import com.krishe.govern.databinding.ActivityNewReportBinding
 import com.krishe.govern.utils.BaseActivity
-import com.krishe.govern.utils.ImageFile
+import com.krishe.govern.utils.FileUtil
 import com.krishe.govern.utils.KrisheUtils
 import com.krishe.govern.views.initreport.InitReportFragment.Companion.newReportModelReqData
 import com.krishe.govern.views.reports.ReportsStatusAdapter.ReportsViewHolder.Companion.nameImageModelObj
+import id.zelory.compressor.Compressor
 import kotlinx.android.synthetic.main.activity_new_report.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import pl.aprilapps.easyphotopicker.DefaultCallback
 import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.MediaSource
+import java.io.File
+import java.io.IOException
 
 /**
  * Created by Nataraj Bingi on Oct 24, 2021
@@ -60,7 +65,9 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
     private val stepThree = 3
     private var currentStep = 0
 
-    private val activityScope = CoroutineScope(Dispatchers.Default)
+//    private val activityScope = CoroutineScope(Dispatchers.Default)
+    private var actualImage: File? = null
+    private var compressedImage: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -396,10 +403,25 @@ class NewReportActivity : BaseActivity(), OnItemClickListener, NewReportCallBack
 
                     adapterItem?.imgPath = imageFiles[0].file.absoluteFile.toString()
 //                    Log.e("TAG", "onMediaFilesPicked: imgPath ${adapterItem?.imgPath}" )
-                    val imageFileObj = ImageFile(imageFiles[0].file.toUri(),adapterItem?.imgPath.toString())
-                    val imgPathStr = imageFileObj.copyFileStream(this@NewReportActivity, imageFiles[0].file.toUri())
-                    adapterItem?.imgPath = imgPathStr
+//                    val imageFileObj = ImageFile(imageFiles[0].file.toUri(),adapterItem?.imgPath.toString())
+//                    val imgPathStr = imageFileObj.copyFileStream(this@NewReportActivity, imageFiles[0].file.toUri())
+//                    adapterItem?.imgPath = imgPathStr
 //                    Log.e("TAG", "onMediaFilesPicked: imgPathStr ${imgPathStr}" )
+                    try {
+                        actualImage = FileUtil.from(this@NewReportActivity, imageFiles[0].file.toUri())
+                        actualImage?.let { imageFile ->
+                            lifecycleScope.launch {
+                                // Default compression
+                                compressedImage = Compressor.compress(this@NewReportActivity, imageFile)
+                                //setCompressedImage()
+                                adapterItem?.imgPath = compressedImage?.absolutePath.toString()
+                            }
+                        } ?: Log.e("TAG","Please choose an image!")
+                    } catch (e: IOException) {
+                        //showError("Failed to read picture data!")
+                        e.printStackTrace()
+                    }
+
                     if (isNew) {
                         viewModel.defaultData.add(adapterItem!!)
                     } else {
